@@ -42,10 +42,6 @@ class NotificationsFragment : Fragment() {
         // 设置注册按钮点击事件
         signupButton.setOnClickListener {
             // 跳转到SignUpFragment
-//            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-//            transaction.replace(R.id.fragment_container, SignUpFragment())
-//            transaction.addToBackStack(null)
-//            transaction.commit()
             findNavController().navigate(R.id.signUpFragment)
         }
 
