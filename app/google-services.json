@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "511929627428",
+    "project_id": "toilethero-8206e",
+    "storage_bucket": "toilethero-8206e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511929627428:android:ad10df9484f4d3004b39b1",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuQXjwGaxNzZvbCu0SnRQMViz1iLw81IU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

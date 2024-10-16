@@ -22,8 +22,33 @@
         android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <!-- Sign Up Fragment -->
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="SignUpFragment"
-        android:label="SignUpFragment" />
+        android:name="com.example.myapplication.ui.signup.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up" />
+
+    <!-- Account Fragment -->
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.myapplication.ui.account.AccountFragment"
+        android:label="Account Page"
+        tools:layout="@layout/fragment_account" />
+
+    <!-- Action from SignUpFragment to AccountFragment -->
+    <action
+        android:id="@+id/action_signUpFragment_to_accountFragment"
+        app:destination="@id/accountFragment" />
+
+    <action
+        android:id="@+id/action_notificationsFragment_to_accountFragment"
+        app:destination="@id/accountFragment" />
+
+    <action
+        android:id="@+id/action_notificationsFragment_to_signUpFragment"
+        app:destination="@id/signUpFragment" />
+
+
 </navigation>

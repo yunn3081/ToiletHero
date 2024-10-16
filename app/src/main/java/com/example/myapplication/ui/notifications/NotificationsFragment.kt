@@ -1,5 +1,5 @@
 package com.example.myapplication.ui.notifications
-import SignUpFragment
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +8,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
-
+import com.google.firebase.auth.FirebaseAuth
 
 class NotificationsFragment : Fragment() {
+
+    // 初始化 FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,35 +24,48 @@ class NotificationsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_notifications, container, false)
 
-        // 获取EditText和Button
-        val usernameEditText = view.findViewById<EditText>(R.id.username)
+        // 初始化 FirebaseAuth
+        auth = FirebaseAuth.getInstance()
+
+        // 連接 UI 元素
+        val emailEditText = view.findViewById<EditText>(R.id.email)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
         val loginButton = view.findViewById<Button>(R.id.login_button)
         val signupButton = view.findViewById<Button>(R.id.signup_button)
 
-        // 设置登录按钮点击事件
+        // 設置登入按鈕的點擊事件
         loginButton.setOnClickListener {
-            val username = usernameEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            if (username.isNotEmpty() && password.isNotEmpty()) {
-                Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+            val email = emailEditText.text.toString().trim() // 確保獲取的是 email
+            val password = passwordEditText.text.toString().trim()
+
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                // 使用 FirebaseAuth 進行登入
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // 登入成功，導航到 AccountFragment
+                            Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_notificationsFragment_to_accountFragment)
+                        } else {
+                            // 登入失敗，顯示錯誤訊息
+                            Toast.makeText(
+                                context,
+                                "Login Failed: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             } else {
-                Toast.makeText(context, "Please enter username and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 设置注册按钮点击事件
+        // 註冊按鈕的點擊事件
         signupButton.setOnClickListener {
-            // 跳转到SignUpFragment
-//            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-//            transaction.replace(R.id.fragment_container, SignUpFragment())
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-            findNavController().navigate(R.id.signUpFragment)
+            // 導航到 SignUpFragment
+            findNavController().navigate(R.id.action_notificationsFragment_to_signUpFragment)
         }
 
         return view
     }
-
-
 }
