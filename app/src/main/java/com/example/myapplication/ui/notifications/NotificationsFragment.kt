@@ -64,6 +64,7 @@ class NotificationsFragment : Fragment() {
         signupButton.setOnClickListener {
             // 導航到 SignUpFragment
             findNavController().navigate(R.id.action_notificationsFragment_to_signUpFragment)
+
         }
 
         return view
