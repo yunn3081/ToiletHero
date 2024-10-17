@@ -37,6 +37,12 @@
         android:label="Account Page"
         tools:layout="@layout/fragment_account" />
 
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_notifications" />
+
     <!-- Action from SignUpFragment to AccountFragment -->
     <action
         android:id="@+id/action_signUpFragment_to_accountFragment"
@@ -49,6 +55,10 @@
     <action
         android:id="@+id/action_notificationsFragment_to_signUpFragment"
         app:destination="@id/signUpFragment" />
+
+    <action
+        android:id="@+id/action_accountFragment_to_notificationsFragment"
+        app:destination="@id/notificationsFragment" />
 
 
 </navigation>

@@ -33,6 +33,7 @@ class SignUpFragment : Fragment() {
 
         // 連接 UI 元素
         val emailEditText = view.findViewById<EditText>(R.id.email)
+        val passwordEditText = view.findViewById<EditText>(R.id.password) // 新增密碼欄位
         val firstNameEditText = view.findViewById<EditText>(R.id.first_name)
         val lastNameEditText = view.findViewById<EditText>(R.id.last_name)
         val phoneEditText = view.findViewById<EditText>(R.id.phone_number)
@@ -42,13 +43,13 @@ class SignUpFragment : Fragment() {
         // 註冊按鈕的點擊事件
         signUpButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim() // 使用用戶輸入的密碼
             val firstName = firstNameEditText.text.toString().trim()
             val lastName = lastNameEditText.text.toString().trim()
             val phone = phoneEditText.text.toString().trim()
             val dob = dobEditText.text.toString().trim()
-            val password = "defaultPassword123" // Firebase Auth requires a password
 
-            // 簡單檢查是否輸入了 email 和 password
+            // 檢查是否輸入了 email 和 password
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -64,7 +65,7 @@ class SignUpFragment : Fragment() {
                         // 構建用戶對象
                         val user = User(userId, firstName, lastName, email, phone, dob)
 
-                        // 将用户信息保存到Firebase Realtime Database
+                        // 将用户信息保存到 Firebase Realtime Database
                         if (userId != null) {
                             database.child("users").child(userId).setValue(user)
                                 .addOnCompleteListener { task ->

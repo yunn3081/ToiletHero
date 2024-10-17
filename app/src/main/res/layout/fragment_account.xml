@@ -1,16 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- 帳戶頁面的文本或其他 UI 元素 -->
     <TextView
-        android:id="@+id/tv_account_welcome"
+        android:id="@+id/account_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to your account!"
-        android:textSize="18sp" />
+        android:text="Welcome to your Account Page"
+        android:textSize="18sp"
+        android:gravity="center"/>
+
+    <!-- 登出按鈕 -->
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_marginTop="24dp" />
 
 </LinearLayout>

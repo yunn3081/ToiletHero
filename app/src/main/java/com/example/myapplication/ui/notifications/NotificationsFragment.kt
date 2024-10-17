@@ -35,7 +35,7 @@ class NotificationsFragment : Fragment() {
 
         // 設置登入按鈕的點擊事件
         loginButton.setOnClickListener {
-            val email = emailEditText.text.toString().trim() // 確保獲取的是 email
+            val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
