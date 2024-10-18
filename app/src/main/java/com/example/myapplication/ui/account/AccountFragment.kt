@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
@@ -35,11 +36,24 @@ class AccountFragment : Fragment() {
             findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment)
         }
 
+        // 設置 My Information 按鈕的點擊事件
+        val myInfoButton = view.findViewById<Button>(R.id.my_info_button)
+        myInfoButton.setOnClickListener {
+            // 導航到 AccountInfoFragment
+            findNavController().navigate(R.id.action_accountFragment_to_accountInfoFragment)
+        }
         // 設置導航到 Review 頁面的按鈕點擊事件
         reviewButton.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_reviewFragment)
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 隐藏返回按钮
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 }
