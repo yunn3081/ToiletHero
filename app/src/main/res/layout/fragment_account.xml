@@ -12,7 +12,23 @@
         android:layout_height="wrap_content"
         android:text="Welcome to your Account Page"
         android:textSize="18sp"
-        android:gravity="center"/>
+        android:gravity="center" />
+
+    <!-- 編輯個人資料按鈕 -->
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:layout_marginTop="24dp" />
+
+    <!-- 查看評論按鈕 -->
+    <Button
+        android:id="@+id/review_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Reviews"
+        android:layout_marginTop="24dp" />
 
     <!-- 登出按鈕 -->
     <Button

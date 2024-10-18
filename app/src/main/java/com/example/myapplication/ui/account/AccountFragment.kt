@@ -26,12 +26,18 @@ class AccountFragment : Fragment() {
 
         // 連接 UI 元素
         val logoutButton = view.findViewById<Button>(R.id.logout_button)
+        val reviewButton = view.findViewById<Button>(R.id.review_button) // 新增的按鈕
 
         // 設置登出按鈕的點擊事件
         logoutButton.setOnClickListener {
             auth.signOut()  // 執行 Firebase 的登出操作
             // 登出後導航回登入頁面 (NotificationsFragment)
             findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment)
+        }
+
+        // 設置導航到 Review 頁面的按鈕點擊事件
+        reviewButton.setOnClickListener {
+            findNavController().navigate(R.id.action_accountFragment_to_reviewFragment)
         }
 
         return view

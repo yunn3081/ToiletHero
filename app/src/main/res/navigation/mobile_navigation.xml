@@ -61,4 +61,69 @@
         app:destination="@id/notificationsFragment" />
 
 
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.myapplication.ui.account.AccountFragment"
+        android:label="Account Page"
+        tools:layout="@layout/fragment_account"
+        tools:ignore="DuplicateIds" />
+
+    <!-- ReviewFragment 定義 -->
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.example.myapplication.ui.review.ReviewFragment"
+        android:label="Reviews"
+        tools:layout="@layout/fragment_review" />
+
+    <!-- CreateReviewFragment 定義（如果需要單獨頁面創建評論） -->
+    <fragment
+        android:id="@+id/createReviewFragment"
+        android:name="com.example.myapplication.ui.review.CreateReviewFragment"
+        android:label="Create Review"
+        tools:layout="@layout/fragment_create_review" />
+
+    <!-- 從 AccountFragment 導航到 ReviewFragment -->
+    <action
+        android:id="@+id/action_accountFragment_to_reviewFragment"
+        app:destination="@id/reviewFragment" />
+
+    <!-- 從 ReviewFragment 導航到 CreateReviewFragment -->
+    <action
+        android:id="@+id/action_reviewFragment_to_createReviewFragment"
+        app:destination="@id/createReviewFragment" />
+
+    <fragment
+        android:id="@+id/createReviewFragment"
+        android:name="com.example.myapplication.ui.review.CreateReviewFragment"
+        android:label="Create Review"
+        tools:layout="@layout/fragment_create_review"
+        tools:ignore="DuplicateIds" />
+
+    <!-- 從 ReviewFragment 到 CreateReviewFragment 的導航 -->
+    <action
+        android:id="@+id/action_reviewFragment_to_createReviewFragment"
+        app:destination="@id/createReviewFragment"
+        tools:ignore="DuplicateIds" />
+
+    <!-- 從 CreateReviewFragment 返回到 ReviewFragment 的導航 -->
+    <action
+        android:id="@+id/action_createReviewFragment_to_reviewFragment"
+        app:destination="@id/reviewFragment" />
+
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.example.myapplication.ui.review.ReviewFragment"
+        tools:layout="@layout/fragment_review"
+        tools:ignore="DuplicateIds">
+        <action
+            android:id="@+id/action_reviewFragment_to_editReviewFragment"
+            app:destination="@id/editReviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editReviewFragment"
+        android:name="com.example.myapplication.ui.review.EditReviewFragment"
+        tools:layout="@layout/fragment_edit_review" />
+
+
 </navigation>

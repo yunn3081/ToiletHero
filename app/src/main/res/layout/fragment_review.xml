@@ -1,0 +1,49 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 沒有評論時顯示的文本 -->
+    <TextView
+        android:id="@+id/no_reviews_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No reviews available"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/reviews_recycler_view" />
+
+    <!-- RecyclerView 顯示評論 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reviews_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/no_reviews_text_view"
+        app:layout_constraintBottom_toTopOf="@+id/create_review_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 創建評論的按鈕 -->
+    <Button
+        android:id="@+id/create_review_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Create Review"
+        app:layout_constraintBottom_toTopOf="@+id/space"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <!-- 用於避免按鈕被Nav Bar擋住的空隙，將高度調整為32dp -->
+    <View
+        android:id="@+id/space"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
