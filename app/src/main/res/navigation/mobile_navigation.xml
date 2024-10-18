@@ -35,30 +35,47 @@
         android:id="@+id/accountFragment"
         android:name="com.example.myapplication.ui.account.AccountFragment"
         android:label="Account Page"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account">
 
+        <!-- Action from AccountFragment to AccountInfoFragment -->
+        <action
+            android:id="@+id/action_accountFragment_to_accountInfoFragment"
+            app:destination="@id/accountInfoFragment" />
+    </fragment>
+
+    <!-- Account Info Fragment -->
+    <fragment
+        android:id="@+id/accountInfoFragment"
+        android:name="com.example.myapplication.ui.account.AccountInfoFragment"
+        android:label="Account Information"
+        tools:layout="@layout/fragment_account_info" />
+
+    <!-- Notifications Fragment (Login) -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
         android:label="Login"
         tools:layout="@layout/fragment_notifications" />
 
+
     <!-- Action from SignUpFragment to AccountFragment -->
     <action
         android:id="@+id/action_signUpFragment_to_accountFragment"
         app:destination="@id/accountFragment" />
 
+    <!-- Action from NotificationsFragment to AccountFragment -->
     <action
         android:id="@+id/action_notificationsFragment_to_accountFragment"
         app:destination="@id/accountFragment" />
 
+    <!-- Action from NotificationsFragment to SignUpFragment -->
     <action
         android:id="@+id/action_notificationsFragment_to_signUpFragment"
         app:destination="@id/signUpFragment" />
 
+    <!-- Action from AccountFragment to NotificationsFragment -->
     <action
         android:id="@+id/action_accountFragment_to_notificationsFragment"
         app:destination="@id/notificationsFragment" />
-
 
 </navigation>

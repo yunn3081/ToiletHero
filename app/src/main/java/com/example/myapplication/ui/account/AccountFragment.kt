@@ -34,6 +34,13 @@ class AccountFragment : Fragment() {
             findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment)
         }
 
+        // 設置 My Information 按鈕的點擊事件
+        val myInfoButton = view.findViewById<Button>(R.id.my_info_button)
+        myInfoButton.setOnClickListener {
+            // 導航到 AccountInfoFragment
+            findNavController().navigate(R.id.action_accountFragment_to_accountInfoFragment)
+        }
+
         return view
     }
 }
