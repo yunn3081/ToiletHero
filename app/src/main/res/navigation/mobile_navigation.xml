@@ -7,33 +7,33 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.myapplication.ui.home.HomeFragment"
+        android:name="com.example.myapplication.toilethero.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.myapplication.ui.dashboard.DashboardFragment"
+        android:name="com.example.myapplication.toilethero.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
+        android:name="com.example.myapplication.toilethero.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
     <!-- Sign Up Fragment -->
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.myapplication.ui.signup.SignUpFragment"
+        android:name="com.example.myapplication.toilethero.signup.SignUpFragment"
         android:label="Sign Up"
         tools:layout="@layout/fragment_sign_up" />
 
     <!-- Account Fragment -->
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.myapplication.ui.account.AccountFragment"
+        android:name="com.example.myapplication.toilethero.account.AccountFragment"
         android:label="Account Page"
         tools:layout="@layout/fragment_account" >
 
@@ -46,14 +46,14 @@
     <!-- Account Info Fragment -->
     <fragment
         android:id="@+id/accountInfoFragment"
-        android:name="com.example.myapplication.ui.account.AccountInfoFragment"
+        android:name="com.example.myapplication.toilethero.account.AccountInfoFragment"
         android:label="Account Information"
         tools:layout="@layout/fragment_account_info" />
 
     <!-- Notifications Fragment (Login) -->
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
+        android:name="com.example.myapplication.toilethero.notifications.NotificationsFragment"
         android:label="Login"
         tools:layout="@layout/fragment_notifications" />
 
@@ -80,14 +80,14 @@
     <!-- ReviewFragment 定義 -->
     <fragment
         android:id="@+id/reviewFragment"
-        android:name="com.example.myapplication.ui.review.ReviewFragment"
+        android:name="com.example.myapplication.toilethero.review.ReviewFragment"
         android:label="Reviews"
         tools:layout="@layout/fragment_review" />
 
     <!-- CreateReviewFragment 定義（如果需要單獨頁面創建評論） -->
     <fragment
         android:id="@+id/createReviewFragment"
-        android:name="com.example.myapplication.ui.review.CreateReviewFragment"
+        android:name="com.example.myapplication.toilethero.review.CreateReviewFragment"
         android:label="Create Review"
         tools:layout="@layout/fragment_create_review" />
 
@@ -108,7 +108,7 @@
 
     <fragment
         android:id="@+id/editReviewFragment"
-        android:name="com.example.myapplication.ui.review.EditReviewFragment"
+        android:name="com.example.myapplication.toilethero.review.EditReviewFragment"
         tools:layout="@layout/fragment_edit_review" />
 
     <!-- ReviewFragment 到 EditReviewFragment 的導航 -->

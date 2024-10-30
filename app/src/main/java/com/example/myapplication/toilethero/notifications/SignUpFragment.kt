@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.signup
+package com.example.myapplication.toilethero.signup
 
 import android.os.Bundle
 import android.util.Log

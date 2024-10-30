@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.review
+package com.example.myapplication.toilethero.review
 
 data class Review(
     val reviewId: String = "",

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.review
+package com.example.myapplication.toilethero.review
 
 import android.os.Bundle
 import android.util.Log
