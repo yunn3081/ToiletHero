@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.myapplication.toilethero.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_restroom_nearby"
+        android:name="com.example.myapplication.toilethero.restroom.RestroomNearbyFragment"
+        android:label="@string/title_restroom_nearby"
+        tools:layout="@layout/fragment_restroom_nearby" />
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -115,5 +115,26 @@
     <action
         android:id="@+id/action_reviewFragment_to_editReviewFragment"
         app:destination="@id/editReviewFragment" />
+
+    <!-- Restroom Nearby Fragment -->
+    <fragment
+        android:id="@+id/navigation_restroom_nearby"
+        android:name="com.example.myapplication.toilethero.restroom.RestroomNearbyFragment"
+        android:label="Restroom Nearby"
+        tools:layout="@layout/fragment_restroom_nearby"
+        tools:ignore="DuplicateIds">
+
+        <!-- Action to navigate to RestroomReviewFragment -->
+        <action
+            android:id="@+id/action_restroomNearbyFragment_to_restroomReviewFragment"
+            app:destination="@id/restroomReviewFragment" />
+    </fragment>
+
+    <!-- Restroom Review Fragment -->
+    <fragment
+        android:id="@+id/restroomReviewFragment"
+        android:name="com.example.myapplication.toilethero.review.RestroomReviewFragment"
+        android:label="Restroom Review"
+        tools:layout="@layout/fragment_restroom_review" />
 
 </navigation>

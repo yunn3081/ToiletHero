@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="title_home">Menu</string>
-    <string name="title_dashboard">Restroom Nearby</string>
+    <string name="title_restroom_nearby">Restroom Nearby</string>
     <string name="title_notifications">My Account</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
