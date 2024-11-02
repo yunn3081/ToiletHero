@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#1A3A52</color> <!-- Darkest blue shade -->
+    <color name="colorPrimaryDark">#163144</color> <!-- Dark blue shade -->
+    <color name="colorAccent">#566D7E</color> <!-- Medium blue shade -->
+    <color name="colorSecondary">#857F72</color> <!-- Brownish shade -->
+    <color name="colorBackground">#D3CBB8</color> <!-- Light beige shade -->
 </resources>
