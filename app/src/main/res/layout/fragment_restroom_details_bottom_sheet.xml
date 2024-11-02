@@ -1,0 +1,40 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header with Name -->
+    <TextView
+        android:id="@+id/restroom_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Address -->
+    <TextView
+        android:id="@+id/restroom_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp" />
+
+    <!-- Placeholder for Image -->
+    <ImageView
+        android:id="@+id/restroom_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@drawable/restroom"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="8dp" />
+
+    <!-- Rating & Reviews -->
+    <TextView
+        android:id="@+id/rating_reviews_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

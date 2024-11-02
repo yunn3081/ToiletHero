@@ -137,4 +137,20 @@
         android:label="Restroom Review"
         tools:layout="@layout/fragment_restroom_review" />
 
+    <fragment
+        android:id="@+id/restroomNearbyFragment"
+        android:name="com.example.myapplication.toilethero.restroom.RestroomNearbyFragment"
+        tools:layout="@layout/fragment_restroom_nearby">
+
+        <!-- Action to navigate to RestroomDetailsFragment -->
+        <action
+            android:id="@+id/action_restroomNearbyFragment_to_restroomDetailsFragment"
+            app:destination="@id/restroomDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/restroomDetailsFragment"
+        android:name="com.example.myapplication.toilethero.restroom.RestroomDetailsBottomSheet"
+        tools:layout="@layout/fragment_restroom_details_bottom_sheet" />
+
 </navigation>

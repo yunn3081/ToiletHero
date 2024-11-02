@@ -9,8 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,7 +27,6 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var database: DatabaseReference
-    private var selectedMarker: Marker? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,14 +34,14 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_restroom_nearby, container, false)
 
-        // Initialize FusedLocationProviderClient
+        // Initialize the FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // Set up map fragment
+        // Set up the map fragment
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        // Initialize Firebase Database reference
+        // Initialize the Firebase Database reference
         database = FirebaseDatabase.getInstance().reference
 
         return view
@@ -62,11 +59,12 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            // Request permissions if not granted
             return
         }
         map.isMyLocationEnabled = true
 
-        // Center the camera on the user location
+        // Get current location and move the camera
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             location?.let {
                 val currentLatLng = LatLng(it.latitude, it.longitude)
@@ -74,39 +72,17 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        // Load restroom locations from Firebase
+        // Load restroom locations from Firebase and display them
         loadRestroomsFromFirebase()
-
-        // Set a custom InfoWindowAdapter
-        map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
-            override fun getInfoWindow(marker: Marker): View? {
-                return null // Use default frame for the info window
-            }
-
-            override fun getInfoContents(marker: Marker): View {
-                val infoView = layoutInflater.inflate(R.layout.custom_info_window, null)
-
-                val buildingNameTextView = infoView.findViewById<TextView>(R.id.building_name)
-                val ratingTextView = infoView.findViewById<TextView>(R.id.rating_text)
-                val viewReviewsButton = infoView.findViewById<Button>(R.id.view_reviews_button)
-
-                buildingNameTextView.text = marker.title
-                ratingTextView.text = "4.5 ★" // Example rating; replace with real data if available
-
-                // Set up the button click listener
-                viewReviewsButton.setOnClickListener {
-                    // Navigate to RestroomReviewFragment when the button is clicked
-                    findNavController().navigate(R.id.action_restroomNearbyFragment_to_restroomReviewFragment)
-                }
-
-                return infoView
-            }
-        })
 
         // Set a click listener for markers
         map.setOnMarkerClickListener { marker ->
-            selectedMarker = marker
-            marker.showInfoWindow()
+            // Open the RestroomDetailsBottomSheet when the marker's info window is clicked
+            val restroomId = marker.tag as? String
+            restroomId?.let {
+                val bottomSheet = RestroomDetailsBottomSheet.newInstance(it)
+                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            }
             true
         }
     }
@@ -117,8 +93,11 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                 for (restroomSnapshot in snapshot.children) {
                     val gpsCoordinates = restroomSnapshot.child("gpsCoordinates").getValue(String::class.java)
                     val buildingName = restroomSnapshot.child("buildingName").getValue(String::class.java)
+                    val rating = restroomSnapshot.child("rating").getValue(Double::class.java) ?: 0.0
+                    val restroomId = restroomSnapshot.key
 
-                    if (!gpsCoordinates.isNullOrBlank() && !buildingName.isNullOrBlank()) {
+                    if (!gpsCoordinates.isNullOrBlank() && !buildingName.isNullOrBlank() && restroomId != null) {
+                        // Split the coordinates into latitude and longitude
                         val coordinates = gpsCoordinates.split(",")
                         if (coordinates.size == 2) {
                             val latitude = coordinates[0].toDoubleOrNull()
@@ -128,12 +107,13 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                                 val restroomLocation = LatLng(latitude, longitude)
                                 val icon = getBitmapDescriptorFromResource(R.drawable.restroom)
 
-                                map.addMarker(
+                                val marker = map.addMarker(
                                     MarkerOptions()
                                         .position(restroomLocation)
-                                        .title(buildingName)
+                                        .title("$buildingName ★ $rating")
                                         .icon(icon)
                                 )
+                                marker?.tag = restroomId // Store restroomId as the marker's tag
                             }
                         }
                     } else {
