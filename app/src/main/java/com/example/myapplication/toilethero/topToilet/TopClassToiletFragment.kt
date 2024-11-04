@@ -1,6 +1,8 @@
 package com.example.myapplication.toilethero.topToilet
+
 import Toilet
 import ToiletAdapter
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +33,13 @@ class TopClassToiletFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         toiletAdapter = ToiletAdapter(toiletsList)
         recyclerView.adapter = toiletAdapter
+
+        // 添加 ItemDecoration 设置项之间的间距
+        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.bottom = 16 // 设置底部间距为 16dp
+            }
+        })
 
         // 初始化 Firebase 数据库引用
         database = FirebaseDatabase.getInstance().getReference("restrooms")
@@ -63,5 +72,4 @@ class TopClassToiletFragment : Fragment() {
                 }
             })
     }
-
 }
