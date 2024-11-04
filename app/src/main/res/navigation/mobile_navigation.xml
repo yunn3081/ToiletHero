@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_top_class_toilet">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.myapplication.toilethero.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_top_class_toilet"
+        android:name="com.example.myapplication.toilethero.topToilet.TopClassToiletFragment"
+        android:label="@string/title_top_class_toilet"
+        tools:layout="@layout/fragment_top_class_toilet" />
 
     <fragment
         android:id="@+id/navigation_restroom_nearby"
