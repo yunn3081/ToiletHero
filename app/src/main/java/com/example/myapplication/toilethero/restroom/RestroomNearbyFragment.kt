@@ -11,22 +11,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var database: DatabaseReference
+    private val viewModel: RestroomMapViewModel by activityViewModels()
+    private var isDataLoaded = false // 用於跟踪 Firebase 數據是否已加載
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,11 +43,6 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         // Initialize the FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        activity?.window?.decorView?.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                )
-
         // Set up the map fragment
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -50,6 +51,30 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         database = FirebaseDatabase.getInstance().reference
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Apply full screen mode when the fragment is visible
+        setFullScreenMode()
+        view?.findViewById<View>(R.id.map_fragment)?.requestLayout()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (this::map.isInitialized) {
+            viewModel.cameraPosition = map.cameraPosition
+        }
+        // Cancel full screen mode when the fragment is no longer visible
+        cancelFullScreenMode()
+    }
+
+    private fun setFullScreenMode() {
+        activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    }
+
+    private fun cancelFullScreenMode() {
+        activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -69,26 +94,39 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         }
         map.isMyLocationEnabled = true
 
-        // Get current location and move the camera
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                val currentLatLng = LatLng(it.latitude, it.longitude)
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
+        // Restore camera position from ViewModel if available
+        viewModel.cameraPosition?.let {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(it))
+        } ?: run {
+            // Get current location and move the camera
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.let {
+                    val currentLatLng = LatLng(it.latitude, it.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
+                    viewModel.cameraPosition = map.cameraPosition
+                }
             }
         }
 
-        // Load restroom locations from Firebase and display them
-        loadRestroomsFromFirebase()
+        // Load restroom locations from Firebase only once
+        if (!isDataLoaded) {
+            loadRestroomsFromFirebase()
+            isDataLoaded = true
+        }
 
         // Set a click listener for markers
         map.setOnMarkerClickListener { marker ->
-            // Open the RestroomDetailsBottomSheet when the marker's info window is clicked
             val restroomId = marker.tag as? String
             restroomId?.let {
                 val bottomSheet = RestroomDetailsBottomSheet.newInstance(it)
                 bottomSheet.show(childFragmentManager, bottomSheet.tag)
             }
             true
+        }
+
+        // Save the camera position when the map moves
+        map.setOnCameraIdleListener {
+            viewModel.cameraPosition = map.cameraPosition
         }
     }
 
@@ -102,7 +140,6 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                     val restroomId = restroomSnapshot.key
 
                     if (!gpsCoordinates.isNullOrBlank() && !buildingName.isNullOrBlank() && restroomId != null) {
-                        // Split the coordinates into latitude and longitude
                         val coordinates = gpsCoordinates.split(",")
                         if (coordinates.size == 2) {
                             val latitude = coordinates[0].toDoubleOrNull()
@@ -118,7 +155,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                                         .title("$buildingName ★ $rating")
                                         .icon(icon)
                                 )
-                                marker?.tag = restroomId // Store restroomId as the marker's tag
+                                marker?.tag = restroomId
                             }
                         }
                     } else {
@@ -133,7 +170,6 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-    // Helper function to get a resized BitmapDescriptor from a resource
     private fun getBitmapDescriptorFromResource(resourceId: Int): BitmapDescriptor {
         val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
         val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, 70, 70, false)
