@@ -1,42 +1,67 @@
 package com.example.myapplication.toilethero.topToilet
-
+import Toilet
+import ToiletAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.databinding.FragmentTopClassToiletBinding // 更新绑定类导入
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class TopClassToiletFragment : Fragment() {
 
-    private var _binding: FragmentTopClassToiletBinding? = null // 更新绑定类名
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var database: DatabaseReference
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var toiletAdapter: ToiletAdapter
+    private val toiletsList = mutableListOf<Toilet>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val topClassToiletViewModel =  // 更新 ViewModel 变量名称
-            ViewModelProvider(this).get(TopClassToiletViewModel::class.java) // 确保 ViewModel 的类名已更新
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_top_class_toilet, container, false)
+        recyclerView = view.findViewById(R.id.recyclerViewTopToilets)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        toiletAdapter = ToiletAdapter(toiletsList)
+        recyclerView.adapter = toiletAdapter
 
-        _binding = FragmentTopClassToiletBinding.inflate(inflater, container, false) // 更新绑定类实例化
-        val root: View = binding.root
+        // 初始化 Firebase 数据库引用
+        database = FirebaseDatabase.getInstance().getReference("restrooms")
 
-        val textView: TextView = binding.textTopClassToilet // 更新为新布局文件中的 ID
-        topClassToiletViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        fetchTopTenToilets()
+
+        return view
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun fetchTopTenToilets() {
+        database.orderByChild("averageOverallScore").limitToLast(10)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    toiletsList.clear()
+                    for (toiletSnapshot in snapshot.children) {
+                        val roomNumber = toiletSnapshot.child("roomNumber").getValue(String::class.java) ?: ""
+                        val buildingName = toiletSnapshot.child("buildingName").getValue(String::class.java) ?: ""
+                        val averageOverallScore = toiletSnapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
+                        val toilet = Toilet(roomNumber = roomNumber, buildingName = buildingName, averageOverallScore = averageOverallScore)
+
+                        toiletsList.add(toilet)
+                    }
+                    // 按评分降序排序
+                    toiletsList.sortByDescending { it.averageOverallScore }
+                    toiletAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // 处理数据库错误
+                }
+            })
     }
+
 }
