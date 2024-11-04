@@ -102,7 +102,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 location?.let {
                     val currentLatLng = LatLng(it.latitude, it.longitude)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
                     viewModel.cameraPosition = map.cameraPosition
                 }
             }
