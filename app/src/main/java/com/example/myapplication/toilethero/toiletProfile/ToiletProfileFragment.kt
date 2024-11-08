@@ -1,4 +1,4 @@
-package com.example.myapplication.toilethero
+package com.example.myapplication.toilethero.toiletProfile
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,6 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

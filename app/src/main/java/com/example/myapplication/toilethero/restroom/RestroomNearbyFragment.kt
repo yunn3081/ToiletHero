@@ -32,7 +32,11 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var database: DatabaseReference
     private val viewModel: RestroomMapViewModel by activityViewModels()
-    private var isDataLoaded = false // 用於跟踪 Firebase 數據是否已加載
+    private var isDataLoaded = false // Used to track if Firebase data is loaded
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,44 +93,88 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // Request permissions if not granted
+            // Request location permissions if not granted
+            requestLocationPermissions()
             return
         }
-        map.isMyLocationEnabled = true
 
-        // Restore camera position from ViewModel if available
-        viewModel.cameraPosition?.let {
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(it))
-        } ?: run {
-            // Get current location and move the camera
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                location?.let {
-                    val currentLatLng = LatLng(it.latitude, it.longitude)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
-                    viewModel.cameraPosition = map.cameraPosition
+        // Enable location and set up the map
+        enableLocationOnMap()
+    }
+
+    private fun requestLocationPermissions() {
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permissions granted, enable location on the map
+                enableLocationOnMap()
+            } else {
+                // Permissions denied, show a message to the user
+                Log.e("RestroomNearbyFragment", "Location permissions are required to use this feature.")
+            }
+        }
+    }
+
+    private fun enableLocationOnMap() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map.isMyLocationEnabled = true
+
+            // Restore camera position from ViewModel if available
+            viewModel.cameraPosition?.let {
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(it))
+            } ?: run {
+                // Get current location and move the camera
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    location?.let {
+                        val currentLatLng = LatLng(it.latitude, it.longitude)
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+                        viewModel.cameraPosition = map.cameraPosition
+                    }
                 }
             }
-        }
 
-        // Load restroom locations from Firebase only once
-        if (!isDataLoaded) {
-            loadRestroomsFromFirebase()
-            isDataLoaded = true
-        }
-
-        // Set a click listener for markers
-        map.setOnMarkerClickListener { marker ->
-            val restroomId = marker.tag as? String
-            restroomId?.let {
-                val bottomSheet = RestroomDetailsBottomSheet.newInstance(it)
-                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            // Load restroom locations from Firebase only once
+            if (!isDataLoaded) {
+                loadRestroomsFromFirebase()
+                isDataLoaded = true
             }
-            true
-        }
 
-        // Save the camera position when the map moves
-        map.setOnCameraIdleListener {
-            viewModel.cameraPosition = map.cameraPosition
+            // Set a click listener for markers
+            map.setOnMarkerClickListener { marker ->
+                val restroomId = marker.tag as? String
+                restroomId?.let {
+                    val bottomSheet = RestroomDetailsBottomSheet.newInstance(it)
+                    bottomSheet.show(childFragmentManager, bottomSheet.tag)
+                }
+                true
+            }
+
+            // Save the camera position when the map moves
+            map.setOnCameraIdleListener {
+                viewModel.cameraPosition = map.cameraPosition
+            }
         }
     }
 
