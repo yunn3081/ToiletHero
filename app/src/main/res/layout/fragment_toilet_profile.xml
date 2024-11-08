@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ToiletProfileFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- 廁所名稱 -->
+            <TextView
+                android:id="@+id/toilet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading name..."
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/toilet_roomNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading roomNumber..."
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- 地址 -->
+            <TextView
+                android:id="@+id/toilet_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading address..."
+                android:textSize="16sp" />
+
+            <!-- 評分與評論區標題 -->
+            <TextView
+                android:id="@+id/rating_reviews_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rating and Reviews"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+
+
+            <!-- 評分統計 -->
+            <TextView
+                android:id="@+id/rating_stats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading stats..."
+                android:textSize="18sp" />
+
+            <!-- 使用者新增評論 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add your review"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold" />
+
+            <!-- 評分 -->
+            <RatingBar
+                android:id="@+id/toilet_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1"
+                android:rating="0.0"
+                android:scaleX="1"
+                android:scaleY="1" />
+
+            <EditText
+                android:id="@+id/review_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title" />
+
+            <EditText
+                android:id="@+id/review_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Write down your review..." />
+
+            <Button
+                android:id="@+id/submit_review_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

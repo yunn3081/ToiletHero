@@ -6,6 +6,10 @@
     app:startDestination="@+id/navigation_top_class_toilet">
 
     <fragment
+        android:id="@+id/toiletProfileFragment"
+        android:name="com.example.myapplication.toilethero.ToiletProfileFragment"
+        android:label="Toilet Profile" />
+    <fragment
         android:id="@+id/navigation_top_class_toilet"
         android:name="com.example.myapplication.toilethero.topToilet.TopClassToiletFragment"
         android:label="@string/title_top_class_toilet"

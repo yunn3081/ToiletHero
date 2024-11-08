@@ -17,7 +17,8 @@ data class Toilet(
 )
 
 class ToiletAdapter(
-    private val toilets: List<Toilet>
+    private val toilets: List<Toilet>,
+    private val onItemClicked: (String) -> Unit // 新增一個點擊事件回調，傳遞 roomID
 ) : RecyclerView.Adapter<ToiletAdapter.ToiletViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToiletViewHolder {
@@ -28,6 +29,11 @@ class ToiletAdapter(
     override fun onBindViewHolder(holder: ToiletViewHolder, position: Int) {
         val toilet = toilets[position]
         holder.bind(toilet)
+
+        // 設置點擊事件
+        holder.itemView.setOnClickListener {
+            onItemClicked(toilet.roomID) // 傳遞 roomID
+        }
     }
 
     override fun getItemCount(): Int = toilets.size
