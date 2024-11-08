@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -46,6 +48,7 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
         val restroomAddressTextView = view.findViewById<TextView>(R.id.restroom_address)
         val ratingTextView = view.findViewById<TextView>(R.id.rating_reviews_header)
         val restroomImageView = view.findViewById<ImageView>(R.id.restroom_image)
+        val reviewsTextView = view.findViewById<TextView>(R.id.reviews_text) // Add this line
 
         // Load restroom details from Firebase using restroomId
         restroomId?.let { id ->
@@ -53,14 +56,14 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val buildingName = snapshot.child("buildingName").getValue(String::class.java)
                     val address = snapshot.child("street").getValue(String::class.java)
-                    val rating = snapshot.child("rating").getValue(Double::class.java)
+                    val rating = snapshot.child("averageOverallScore").getValue(Double::class.java)
                     val imageUrl = snapshot.child("imageUrl").getValue(String::class.java)
 
                     buildingNameTextView.text = buildingName ?: "No Name"
                     restroomAddressTextView.text = address ?: "No Address"
-                    ratingTextView.text = "${rating ?: 0.0} ★"
+                    ratingTextView.text = "Raiting: ${rating ?: 0.0} ★"
 
-                    // Load image using Glide (make sure to add Glide dependency in your build.gradle)
+                    // Load image using Glide
                     if (!imageUrl.isNullOrEmpty()) {
                         Glide.with(this@RestroomDetailsBottomSheet)
                             .load(imageUrl)
@@ -69,10 +72,26 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Handle the error, e.g., show a toast or log the error
+                    Toast.makeText(context, "Failed to load data: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
             })
         }
+
+        // Ensure navigation only occurs if the action exists in the current NavController context
+        reviewsTextView.setOnClickListener {
+            restroomId?.let { id ->
+                val bundle = Bundle().apply {
+                    putString("roomID", id)
+                }
+                try {
+                    findNavController().navigate(R.id.toiletProfileFragment, bundle)
+                } catch (e: IllegalArgumentException) {
+                    Toast.makeText(context, "Navigation error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+
 
         return view
     }
