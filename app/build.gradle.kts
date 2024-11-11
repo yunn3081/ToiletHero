@@ -10,6 +10,9 @@ plugins {
 android {
     namespace = "com.example.myapplication"
     compileSdk = 34
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.myapplication"
@@ -19,6 +22,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val googleMapsApiKey = if (project.hasProperty("GOOGLE_MAPS_API_KEY")) {
+            project.property("GOOGLE_MAPS_API_KEY") as String
+        } else {
+            ""
+        }
+        buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$googleMapsApiKey\"")
     }
 
     buildTypes {
@@ -64,4 +73,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.play.services.maps.v1700)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
+
 }
