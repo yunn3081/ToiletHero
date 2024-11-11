@@ -1,4 +1,4 @@
-package com.example.myapplication.toilethero.notifications
+package com.example.myapplication.toilethero.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 
-class NotificationsFragment : Fragment() {
+class LoginFragment : Fragment() {
 
     // 初始化 FirebaseAuth
     private lateinit var auth: FirebaseAuth
@@ -22,7 +22,7 @@ class NotificationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_notifications, container, false)
+        val view = inflater.inflate(R.layout.fragment_login, container, false)
 
         // 初始化 FirebaseAuth
         auth = FirebaseAuth.getInstance()

@@ -23,9 +23,9 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.myapplication.toilethero.notifications.NotificationsFragment"
+        android:name="com.example.myapplication.toilethero.login.LoginFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_login" />
 
     <!-- Sign Up Fragment -->
     <fragment
@@ -57,9 +57,9 @@
     <!-- Notifications Fragment (Login) -->
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.myapplication.toilethero.notifications.NotificationsFragment"
+        android:name="com.example.myapplication.toilethero.login.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_login" />
 
     <!-- Action from SignUpFragment to AccountFragment -->
     <action

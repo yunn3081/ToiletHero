@@ -1,22 +1,25 @@
 package com.example.myapplication.toilethero.toiletProfile
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.myapplication.R
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import com.example.myapplication.BuildConfig
+import okio.IOException
 
 class ToiletProfileFragment : Fragment() {
 
@@ -28,10 +31,13 @@ class ToiletProfileFragment : Fragment() {
     private lateinit var reviewTitle: EditText
     private lateinit var reviewBody: EditText
     private lateinit var submitReviewButton: Button
+    private lateinit var restroomImageView: ImageView
+    private lateinit var loadingSpinner: ProgressBar
     private lateinit var database_restrooms: DatabaseReference
     private lateinit var database_reviews: DatabaseReference
-
-
+    private val handler = Handler(Looper.getMainLooper())
+    private val timeoutDuration = 10000L // 10 seconds
+    private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,18 +53,18 @@ class ToiletProfileFragment : Fragment() {
         reviewTitle = view.findViewById(R.id.review_title)
         reviewBody = view.findViewById(R.id.review_body)
         submitReviewButton = view.findViewById(R.id.submit_review_button)
+        restroomImageView = view.findViewById(R.id.restroom_image)
+        loadingSpinner = view.findViewById(R.id.loadingSpinner)
 
-        // 獲取 roomID
         val roomID = arguments?.getString("roomID") ?: return view
+        restroomImageView.visibility = View.INVISIBLE
+        loadingSpinner.visibility = View.VISIBLE
 
-        // 初始化 Firebase Database
         database_restrooms = FirebaseDatabase.getInstance().getReference("restrooms")
         database_reviews = FirebaseDatabase.getInstance().getReference("reviews")
 
-        // 從 Firebase 獲取廁所資訊
         fetchToiletDetails(roomID)
 
-        // 提交評論
         submitReviewButton.setOnClickListener {
             submitReview(roomID)
         }
@@ -69,21 +75,30 @@ class ToiletProfileFragment : Fragment() {
     private fun fetchToiletDetails(roomID: String) {
         database_restrooms.child(roomID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val name = snapshot.child("buildingName").getValue(String::class.java) ?: "Unknown"
-                    val roomNumber = snapshot.child("roomNumber").getValue(String::class.java) ?: "Unknown"
-                    val address = snapshot.child("street").getValue(String::class.java) ?: "Unknown"
-                    val rating = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
-                    val reviewsCount = snapshot.child("reviews_count").getValue(Long::class.java) ?: 0
-//                    val recommendedPercentage = snapshot.child("recommended_percentage").getValue(Double::class.java) ?: 0.0
+                activity?.runOnUiThread {
+                    if (snapshot.exists()) {
+                        val name = snapshot.child("buildingName").getValue(String::class.java) ?: "Unknown"
+                        val roomNumber = snapshot.child("roomNumber").getValue(String::class.java) ?: "Unknown"
+                        val address = snapshot.child("street").getValue(String::class.java) ?: "Unknown"
+                        val rating = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
+                        val reviewsCount = snapshot.child("reviews_count").getValue(Long::class.java) ?: 0
+                        val gpsCoordinates = snapshot.child("gpsCoordinates").getValue(String::class.java)
 
-                    // 更新 UI
-                    toiletName.text = name
-                    toiletRoomNumber.text = roomNumber
-                    toiletAddress.text = address
-                    toiletRating.rating = rating
-                    ratingStats.text = "$rating ★ | $reviewsCount Reviews"
-//                    ratingStats.text = "$rating ★ | $reviewsCount Reviews | $recommendedPercentage% Recommended"
+                        toiletName.text = name
+                        toiletRoomNumber.text = roomNumber
+                        toiletAddress.text = address
+                        toiletRating.rating = rating
+                        ratingStats.text = "$rating ★ | $reviewsCount Reviews"
+
+                        gpsCoordinates?.let {
+                            val (latitude, longitude) = it.split(",").map { coord -> coord.trim().toDouble() }
+                            fetchPlaceId(latitude, longitude) { placeIds ->
+                                placeIds?.let {
+                                    fetchPhotosSequentially(placeIds, restroomImageView, loadingSpinner)
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -93,22 +108,140 @@ class ToiletProfileFragment : Fragment() {
         })
     }
 
+    private fun fetchPlaceId(latitude: Double, longitude: Double, callback: (List<String>?) -> Unit) {
+        val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&rankby=distance&key=$apiKey"
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                callback(null)
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                if (response.isSuccessful) {
+                    val jsonResponse = response.body?.string()
+                    val jsonObject = JSONObject(jsonResponse ?: "")
+                    val resultsArray = jsonObject.optJSONArray("results")
+                    val placeIds = mutableListOf<String>()
+                    if (resultsArray != null && resultsArray.length() > 0) {
+                        for (i in 0 until resultsArray.length()) {
+                            val placeId = resultsArray.getJSONObject(i).getString("place_id")
+                            placeIds.add(placeId)
+                        }
+                        callback(placeIds)
+                    } else {
+                        callback(null)
+                    }
+                } else {
+                    callback(null)
+                }
+            }
+        })
+    }
+
+    private fun fetchPhotosSequentially(placeIds: List<String>, imageView: ImageView, loadingSpinner: ProgressBar, index: Int = 0) {
+        if (index >= placeIds.size) {
+            handler.removeCallbacksAndMessages(null)
+            loadingSpinner.visibility = View.GONE
+            imageView.setImageResource(R.drawable.noimage)
+            imageView.visibility = View.VISIBLE
+            return
+        }
+
+        fetchPhotoReference(placeIds[index]) { photoReference ->
+            if (photoReference != null) {
+                loadPlaceImage(photoReference, imageView, loadingSpinner)
+            } else {
+                fetchPhotosSequentially(placeIds, imageView, loadingSpinner, index + 1)
+            }
+        }
+    }
+
+    private fun fetchPhotoReference(placeId: String, callback: (String?) -> Unit) {
+        val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey"
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                callback(null)
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                if (response.isSuccessful) {
+                    val jsonResponse = response.body?.string()
+                    val jsonObject = JSONObject(jsonResponse ?: "")
+                    val result = jsonObject.optJSONObject("result")
+                    val photosArray = result?.optJSONArray("photos")
+                    if (photosArray != null && photosArray.length() > 0) {
+                        val photoReference = photosArray.getJSONObject(0).getString("photo_reference")
+                        callback(photoReference)
+                    } else {
+                        callback(null)
+                    }
+                } else {
+                    callback(null)
+                }
+            }
+        })
+    }
+
+    private fun loadPlaceImage(photoReference: String, imageView: ImageView, loadingSpinner: ProgressBar) {
+        val url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$photoReference&key=$apiKey"
+
+        activity?.runOnUiThread {
+            Glide.with(this)
+                .load(url)
+                .listener(object : com.bumptech.glide.request.RequestListener<android.graphics.drawable.Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        handler.removeCallbacksAndMessages(null)
+                        loadingSpinner.visibility = View.GONE
+                        imageView.setImageResource(R.drawable.noimage)
+                        imageView.visibility = View.VISIBLE
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: android.graphics.drawable.Drawable?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable>?,
+                        dataSource: com.bumptech.glide.load.DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        handler.removeCallbacksAndMessages(null)
+                        loadingSpinner.visibility = View.GONE
+                        imageView.visibility = View.VISIBLE
+                        return false
+                    }
+                })
+                .into(imageView)
+        }
+    }
+
     private fun submitReview(roomID: String) {
         val title = reviewTitle.text.toString().trim()
         val body = reviewBody.text.toString().trim()
-        val rating = toiletRating.rating // 獲取用戶選擇的評分
-        val userID = "some_user_id" // 替換為實際用戶ID來源，例如 FirebaseAuth.getInstance().currentUser?.uid
-        val imageURL = "some_image_url" // 如果有圖片，可以提供 URL；否則可為空字符串或不設置
+        val rating = toiletRating.rating
+        val userID = "some_user_id"
 
         if (title.isEmpty() || body.isEmpty() || rating == 0.0f) {
             Toast.makeText(context, "Please fill in the title, review, and rating", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 生成唯一的 reviewID
         val reviewID = database_restrooms.push().key ?: return
-
-        // 構建評論的資料
         val review = mapOf(
             "reviewID" to reviewID,
             "roomID" to roomID,
@@ -118,14 +251,12 @@ class ToiletProfileFragment : Fragment() {
             "rating" to rating
         )
 
-        // 將評論存到 Firebase 中的 reviews 表中
-
         database_reviews.child(reviewID).setValue(review)
             .addOnSuccessListener {
                 Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
                 reviewTitle.text.clear()
                 reviewBody.text.clear()
-                toiletRating.rating = 0.0f // 重置評分為 0
+                toiletRating.rating = 0.0f
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
