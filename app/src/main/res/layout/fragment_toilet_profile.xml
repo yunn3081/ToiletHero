@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".toilethero.toiletProfile.ToiletProfileFragment">
 
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -140,7 +141,8 @@
             android:id="@+id/reviews_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:paddingBottom="36dp" />
 
         <TextView
             android:id="@+id/no_reviews_text_view"
@@ -151,5 +153,5 @@
             android:textSize="16sp"
             android:visibility="gone" />
         </LinearLayout>
-<!--    </ScrollView>-->
+    </ScrollView>
 </FrameLayout>
