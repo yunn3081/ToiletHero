@@ -9,6 +9,9 @@
         android:id="@+id/toiletProfileFragment"
         android:name="com.example.myapplication.toilethero.toiletProfile.ToiletProfileFragment"
         android:label="Toilet Profile" />
+        <action
+        android:id="@+id/action_toiletProfileFragment_to_loginFragment"
+        app:destination="@id/navigation_notifications" />
     <fragment
         android:id="@+id/navigation_top_class_toilet"
         android:name="com.example.myapplication.toilethero.topToilet.TopClassToiletFragment"
@@ -59,7 +62,12 @@
         android:id="@+id/notificationsFragment"
         android:name="com.example.myapplication.toilethero.login.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+        <argument
+            android:name="returnToReviewPage"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 
     <!-- Action from SignUpFragment to AccountFragment -->
     <action

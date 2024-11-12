@@ -1,5 +1,6 @@
 package com.example.myapplication.toilethero.toiletProfile
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -19,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import com.example.myapplication.BuildConfig
+import com.google.firebase.auth.FirebaseAuth
 import okio.IOException
 
 class ToiletProfileFragment : Fragment() {
@@ -31,6 +34,7 @@ class ToiletProfileFragment : Fragment() {
     private lateinit var reviewTitle: EditText
     private lateinit var reviewBody: EditText
     private lateinit var submitReviewButton: Button
+    private lateinit var loginButton: Button
     private lateinit var restroomImageView: ImageView
     private lateinit var loadingSpinner: ProgressBar
     private lateinit var database_restrooms: DatabaseReference
@@ -38,6 +42,7 @@ class ToiletProfileFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
     private val timeoutDuration = 10000L // 10 seconds
     private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +58,7 @@ class ToiletProfileFragment : Fragment() {
         reviewTitle = view.findViewById(R.id.review_title)
         reviewBody = view.findViewById(R.id.review_body)
         submitReviewButton = view.findViewById(R.id.submit_review_button)
+        loginButton = view.findViewById(R.id.login_button)
         restroomImageView = view.findViewById(R.id.restroom_image)
         loadingSpinner = view.findViewById(R.id.loadingSpinner)
 
@@ -65,8 +71,20 @@ class ToiletProfileFragment : Fragment() {
 
         fetchToiletDetails(roomID)
 
+        // Fetch toilet details and check authentication status
+        fetchToiletDetails(roomID)
+        checkAuthStatus()
+
         submitReviewButton.setOnClickListener {
             submitReview(roomID)
+        }
+
+        loginButton.setOnClickListener {
+            findNavController().navigate(R.id.action_toiletProfileFragment_to_loginFragment, Bundle().apply {
+                putBoolean("returnToReviewPage", true)
+            })
+//            findNavController().navigate(R.id.action_toiletProfileFragment_to_loginFragment)
+
         }
 
         return view
@@ -261,5 +279,26 @@ class ToiletProfileFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+    // Check if user is logged in to show/hide the appropriate buttons
+    private fun checkAuthStatus() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            println("User is logged in: ${user.email ?: "Anonymous"}")
+            submitReviewButton.visibility = View.VISIBLE
+            reviewTitle.visibility = View.VISIBLE
+            reviewBody.visibility = View.VISIBLE
+            ratingStats.visibility = View.VISIBLE
+            toiletRating.visibility = View.VISIBLE
+            loginButton.visibility = View.GONE
+        } else {
+            println("User is not logged in")
+            submitReviewButton.visibility = View.GONE
+            reviewTitle.visibility = View.GONE
+            reviewBody.visibility = View.GONE
+            ratingStats.visibility = View.GONE
+            toiletRating.visibility = View.GONE
+            loginButton.visibility = View.VISIBLE
+        }
     }
 }

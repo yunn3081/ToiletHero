@@ -14,40 +14,42 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragment : Fragment() {
 
-    // 初始化 FirebaseAuth
     private lateinit var auth: FirebaseAuth
+    private var returnToReviewPage: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        // 初始化 FirebaseAuth
         auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+        returnToReviewPage = arguments?.getBoolean("returnToReviewPage") ?: false
 
-        // 連接 UI 元素
+        // If already logged in, navigate based on back stack presence
+        if (currentUser != null) {
+            navigateAfterLogin()
+            return view
+        }
+
+        // Connect UI elements
         val emailEditText = view.findViewById<EditText>(R.id.email)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
         val loginButton = view.findViewById<Button>(R.id.login_button)
         val signupButton = view.findViewById<Button>(R.id.signup_button)
 
-        // 設置登入按鈕的點擊事件
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                // 使用 FirebaseAuth 進行登入
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            // 登入成功，導航到 AccountFragment
                             Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_notificationsFragment_to_accountFragment)
+                            navigateAfterLogin()
                         } else {
-                            // 登入失敗，顯示錯誤訊息
                             Toast.makeText(
                                 context,
                                 "Login Failed: ${task.exception?.message}",
@@ -60,12 +62,20 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // 註冊按鈕的點擊事件
         signupButton.setOnClickListener {
-            // 導航到 SignUpFragment
             findNavController().navigate(R.id.action_notificationsFragment_to_signUpFragment)
         }
 
         return view
+    }
+
+    private fun navigateAfterLogin() {
+        if (returnToReviewPage) {
+            // If there is a previous fragment, pop back to it
+            findNavController().popBackStack()
+        } else {
+            // Otherwise, navigate to the account info page
+            findNavController().navigate(R.id.action_notificationsFragment_to_accountFragment)
+        }
     }
 }
