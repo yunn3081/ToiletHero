@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".toilethero.toiletProfile.ToiletProfileFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -127,7 +127,6 @@
                     android:layout_height="wrap_content"
                     android:text="Log in to Submit"
                     android:layout_marginTop="8dp"/>
-        </LinearLayout>
         <TextView
             android:id="@+id/review_header"
             android:layout_width="wrap_content"
@@ -138,9 +137,19 @@
             android:layout_marginTop="16dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reviewRecyclerView"
+            android:id="@+id/reviews_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
-    </ScrollView>
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/no_reviews_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No reviews available"
+            android:textSize="16sp"
+            android:visibility="gone" />
+        </LinearLayout>
+<!--    </ScrollView>-->
 </FrameLayout>

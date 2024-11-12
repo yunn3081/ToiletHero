@@ -60,7 +60,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         // Apply full screen mode when the fragment is visible
-        setFullScreenMode()
+//        setFullScreenMode()
         view?.findViewById<View>(R.id.map_fragment)?.requestLayout()
     }
 
@@ -70,7 +70,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
             viewModel.cameraPosition = map.cameraPosition
         }
         // Cancel full screen mode when the fragment is no longer visible
-        cancelFullScreenMode()
+//        cancelFullScreenMode()
     }
 
     private fun setFullScreenMode() {

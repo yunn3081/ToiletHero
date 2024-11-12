@@ -40,7 +40,7 @@ class ReviewFragment : Fragment() {
 
         // 設置 RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
-        reviewAdapter = ReviewsAdapter(reviewList, database, auth.currentUser?.uid)
+        reviewAdapter = ReviewsAdapter(reviewList, database, auth.currentUser?.uid, true)
         recyclerView.adapter = reviewAdapter
 
         // 移除 ItemDecoration，這樣評論之間不會有額外的間距
@@ -56,31 +56,83 @@ class ReviewFragment : Fragment() {
         }
 
         // 讀取用戶評論
-        loadReviews()
+        fetchUserReviews()
+//        loadReviews()
 
         return view
     }
 
-    private fun loadReviews() {
-        val userId = auth.currentUser?.uid ?: return
-        database.child("reviews").child(userId).addValueEventListener(object : ValueEventListener {
+//    private fun loadReviews() {
+//        val userId = auth.currentUser?.uid ?: return
+//        database.child("reviews").child(userId).addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                reviewList.clear()
+//                if (snapshot.exists()) {
+//                    noReviewsTextView.visibility = View.GONE // 有評論時隱藏 "No reviews"
+//                    for (reviewSnapshot in snapshot.children) {
+//                        val review = reviewSnapshot.getValue(Review::class.java)
+//                        review?.let { reviewList.add(it) }
+//                    }
+//                } else {
+//                    noReviewsTextView.visibility = View.VISIBLE // 沒有評論時顯示 "No reviews"
+//                }
+//                reviewAdapter.notifyDataSetChanged()
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.e("ReviewFragment", "Failed to load reviews", error.toException())
+//            }
+//        })
+
+    // Example of fetching and filtering reviews (inefficient for large datasets)
+    private fun fetchUserReviews() {
+        val userID = auth.currentUser?.uid ?: return
+        val reviewsRef = database.child("reviews")
+
+        reviewsRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                reviewList.clear()
-                if (snapshot.exists()) {
-                    noReviewsTextView.visibility = View.GONE // 有評論時隱藏 "No reviews"
-                    for (reviewSnapshot in snapshot.children) {
-                        val review = reviewSnapshot.getValue(Review::class.java)
-                        review?.let { reviewList.add(it) }
+                val userReviews = mutableListOf<Review>()
+
+                for (roomSnapshot in snapshot.children) {
+                    val roomID = roomSnapshot.key?.toString() ?: continue
+
+                    for (reviewSnapshot in roomSnapshot.children) {
+                        try {
+                            val rawReview = reviewSnapshot.value as? Map<*, *>
+
+                            // Extract and convert each field explicitly
+                            val review = Review(
+                                reviewID = rawReview?.get("reviewID")?.toString(),
+                                roomID = roomID,
+                                userID = rawReview?.get("userID")?.toString(),
+                                reviewTitle = rawReview?.get("reviewTitle") as? String ?: "",
+                                reviewBody = rawReview?.get("reviewBody") as? String ?: "",
+                                rating = (rawReview?.get("rating") as? Number)?.toFloat() ?: 0.0f
+                            )
+
+                            if (review.userID == userID) {
+                                userReviews.add(review)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("ReviewFetch", "Error converting review: ${e.message}")
+                        }
                     }
-                } else {
-                    noReviewsTextView.visibility = View.VISIBLE // 沒有評論時顯示 "No reviews"
                 }
+
+                // Update RecyclerView
+                reviewList.clear()
+                reviewList.addAll(userReviews)
                 reviewAdapter.notifyDataSetChanged()
+
+                // Show or hide "No reviews" text
+                noReviewsTextView.visibility = if (userReviews.isEmpty()) View.VISIBLE else View.GONE
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("ReviewFragment", "Failed to load reviews", error.toException())
+                Log.e("ReviewFetch", "Error fetching reviews: ${error.message}")
             }
         })
     }
+
+
 }

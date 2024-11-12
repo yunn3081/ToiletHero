@@ -2,18 +2,15 @@ package com.example.myapplication
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication.databinding.ActivityMainBinding
-import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,24 +20,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("ActivityLifecycle", "onCreate called")
 
-        var counter = 0;
-        counter += 1
-        Log.d("MainActivity", "Counter: $counter")
-
-        // 动态添加 Fragment
-        val fragment = Fragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment_activity_main, fragment)
-            .commit()
-
+        // Initialize View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        // Set up the BottomNavigationView
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-        // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
+        // Configure the AppBar with navigation destinations
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_top_class_toilet, R.id.navigation_restroom_nearby, R.id.navigation_notifications
@@ -48,11 +36,14 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // Apply full-screen layout
+        setFullScreenMode()
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                // 返回上一個畫面
                 onBackPressed()
                 true
             }
@@ -60,10 +51,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setFullScreenMode() {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    }
+
     override fun onStart() {
         super.onStart()
         Log.d("ActivityLifecycle", "onStart called")
-
     }
 
     override fun onResume() {
@@ -86,13 +80,3 @@ class MainActivity : AppCompatActivity() {
         Log.d("ActivityLifecycle", "onDestroy called")
     }
 }
-//
-//class ExampleFragment : Fragment() {
-//     fun onCreateView(
-//         inflater: LayoutInflater, container: ViewGroup?,
-//         savedInstanceState: Bundle?
-//    ): View? {
-//        // 使用布局文件 example_fragment.xml 创建并返回视图
-//        return inflater.inflate(R.layout.activity_main, container, false)
-//    }
-//}

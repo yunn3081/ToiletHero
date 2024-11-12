@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -21,6 +23,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import com.example.myapplication.BuildConfig
+import com.example.myapplication.toilethero.review.Review
+import com.example.myapplication.toilethero.review.ReviewsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import okio.IOException
 
@@ -43,6 +47,10 @@ class ToiletProfileFragment : Fragment() {
     private val timeoutDuration = 10000L // 10 seconds
     private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
     private val auth = FirebaseAuth.getInstance()
+    private lateinit var reviewsRecyclerView: RecyclerView
+    private lateinit var reviewsAdapter: ReviewsAdapter
+    private var reviewList = mutableListOf<Review>()
+    private lateinit var noReviewsTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,15 +69,30 @@ class ToiletProfileFragment : Fragment() {
         loginButton = view.findViewById(R.id.login_button)
         restroomImageView = view.findViewById(R.id.restroom_image)
         loadingSpinner = view.findViewById(R.id.loadingSpinner)
+        noReviewsTextView = view.findViewById(R.id.no_reviews_text_view)
 
         val roomID = arguments?.getString("roomID") ?: return view
+
         restroomImageView.visibility = View.INVISIBLE
         loadingSpinner.visibility = View.VISIBLE
 
         database_restrooms = FirebaseDatabase.getInstance().getReference("restrooms")
         database_reviews = FirebaseDatabase.getInstance().getReference("reviews")
 
-        fetchToiletDetails(roomID)
+        // Initialize Firebase Database reference for reviews
+        database_reviews = FirebaseDatabase.getInstance().reference.child("reviews")
+
+        // Setup RecyclerView and attach the adapter
+        reviewsRecyclerView = view.findViewById(R.id.reviews_recycler_view)
+        reviewsRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Initialize adapter and set to RecyclerView
+        reviewsAdapter = ReviewsAdapter(reviewList, database_reviews, null, false)
+        reviewsRecyclerView.layoutManager = LinearLayoutManager(context)
+        reviewsRecyclerView.adapter = reviewsAdapter
+
+        // Load reviews into the list
+        loadReviews(roomID)
 
         // Fetch toilet details and check authentication status
         fetchToiletDetails(roomID)
@@ -252,24 +275,24 @@ class ToiletProfileFragment : Fragment() {
         val title = reviewTitle.text.toString().trim()
         val body = reviewBody.text.toString().trim()
         val rating = toiletRating.rating
-        val userID = "some_user_id"
+        val userID = FirebaseAuth.getInstance().currentUser?.uid
 
         if (title.isEmpty() || body.isEmpty() || rating == 0.0f) {
             Toast.makeText(context, "Please fill in the title, review, and rating", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val reviewID = database_restrooms.push().key ?: return
+        val reviewID = database_reviews.child(roomID).push().key ?: return // Generate a review ID under roomID
         val review = mapOf(
-            "reviewID" to reviewID,
-            "roomID" to roomID,
             "userID" to userID,
             "reviewTitle" to title,
             "reviewBody" to body,
             "rating" to rating
         )
+        print(roomID)
 
-        database_reviews.child(reviewID).setValue(review)
+        // Store the review under "reviews/{roomID}/{reviewID}" without including reviewID as a field
+        database_reviews.child(roomID).child(reviewID).setValue(review)
             .addOnSuccessListener {
                 Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
                 reviewTitle.text.clear()
@@ -280,6 +303,7 @@ class ToiletProfileFragment : Fragment() {
                 Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
     // Check if user is logged in to show/hide the appropriate buttons
     private fun checkAuthStatus() {
         val user = FirebaseAuth.getInstance().currentUser
@@ -301,4 +325,54 @@ class ToiletProfileFragment : Fragment() {
             loginButton.visibility = View.VISIBLE
         }
     }
+//    private fun loadRestroomReviews(roomID: String) {
+//        database_reviews.orderByChild("roomID").equalTo(roomID)
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    reviewList.clear()
+//                    for (reviewSnapshot in snapshot.children) {
+//                        val review = reviewSnapshot.getValue(Review::class.java)
+//                        review?.let { reviewList.add(it) }
+//                    }
+//                    reviewsAdapter.notifyDataSetChanged()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    Log.e("ToiletProfileFragment", "Error loading reviews", error.toException())
+//                }
+//            })
+//    }
+private fun loadReviews(roomID: String) {
+    database_reviews.child(roomID)
+        .addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                reviewList.clear()
+                if (snapshot.exists()) {
+                    noReviewsTextView.visibility = View.GONE
+                    for (reviewSnapshot in snapshot.children) {
+                        val reviewMap = reviewSnapshot.value as Map<*, *>
+                        val ratingValue = (reviewMap["rating"] as? Number)?.toFloat() ?: 0.0f
+                        val review = Review(
+                            reviewID = reviewSnapshot.key ?: "",
+                            roomID = reviewMap["roomID"] as? String ?: "",
+                            userID = reviewMap["userID"] as? String ?: "",
+                            reviewTitle = reviewMap["reviewTitle"] as? String ?: "",
+                            reviewBody = reviewMap["reviewBody"] as? String ?: "",
+                            rating = ratingValue
+                        )
+                        reviewList.add(review)
+                    }
+                } else {
+                    noReviewsTextView.visibility = View.VISIBLE
+                }
+                reviewsAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Failed to load reviews", Toast.LENGTH_SHORT).show()
+            }
+        })
+}
+
+
 }

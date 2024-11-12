@@ -1,68 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- item_review.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <EditText
+        android:id="@+id/room_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Room ID"
+        android:enabled="false"/>
+
+    <EditText
+        android:id="@+id/review_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Review Title"
+        android:enabled="false"/>
+
+    <EditText
+        android:id="@+id/review_body_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:ignore="MissingConstraints">
+        android:hint="Review Body"
+        android:enabled="false"/>
 
-        <!-- 房間 ID -->
-        <EditText
-            android:id="@+id/room_id_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Room ID"
-            android:inputType="text"
-            android:enabled="false"
-            android:textColor="@android:color/black" />
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="true"/>
 
-        <!-- 評論內容 -->
-        <EditText
-            android:id="@+id/comment_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Comment"
-            android:inputType="text"
-            android:textColor="@android:color/black" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <!-- 星級評分 -->
-        <RatingBar
-            android:id="@+id/ratingBar"
+        <Button
+            android:id="@+id/edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1.0" />
+            android:text="Edit"/>
 
-        <!-- 編輯和刪除按鈕 -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end"
-            android:paddingTop="8dp">
-
-            <Button
-                android:id="@+id/edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/delete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:textSize="14sp"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
+            android:text="Delete"/>
     </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
