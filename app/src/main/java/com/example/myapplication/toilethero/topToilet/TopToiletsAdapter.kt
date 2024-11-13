@@ -9,7 +9,7 @@ data class Toilet(
     val roomID: String = "",
     val roomNumber: String = "",
     val buildingName: String = "",
-    val averageOverallScore: Float = 0f, // 设置默认值为 0f
+    val averageOverallScore: Float = 0f,
     val city: String = "",
     val floorNumber: Int = 0,
     val gpsCoordinates: String = "",
@@ -18,7 +18,7 @@ data class Toilet(
 
 class ToiletAdapter(
     private val toilets: List<Toilet>,
-    private val onItemClicked: (String) -> Unit // 新增一個點擊事件回調，傳遞 roomID
+    private val onItemClicked: (String) -> Unit
 ) : RecyclerView.Adapter<ToiletAdapter.ToiletViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToiletViewHolder {
@@ -30,9 +30,9 @@ class ToiletAdapter(
         val toilet = toilets[position]
         holder.bind(toilet)
 
-        // 設置點擊事件
+        // response on click
         holder.itemView.setOnClickListener {
-            onItemClicked(toilet.roomID) // 傳遞 roomID
+            onItemClicked(toilet.roomID)
         }
     }
 
@@ -43,9 +43,9 @@ class ToiletAdapter(
         private val toiletScore: TextView = itemView.findViewById(R.id.toiletScore)
 
         fun bind(toilet: Toilet) {
-            // 设置 toiletName 为 roomNumber + buildingName
+            // set toiletName as roomNumber + buildingName
             toiletName.text = "${toilet.roomNumber} - ${toilet.buildingName}"
-            // 设置 toiletScore 为 averageOverallScore
+            // set toiletScore as averageOverallScore
             toiletScore.text = "Rating: ${toilet.averageOverallScore}"
         }
     }

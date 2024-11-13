@@ -26,14 +26,14 @@ class AccountFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
-        // 初始化 FirebaseAuth 和 FirebaseDatabase
+        // init FirebaseAuth and FirebaseDatabase
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // 获取问候文本的 TextView
+        // get greeting TextView
         val greetingText = view.findViewById<TextView>(R.id.greetingText)
 
-        // 从 Firebase 获取用户的 FName 并设置问候语
+        // get user's first name from Firebase and creating greetings
         val userId = auth.currentUser?.uid
         userId?.let {
             database.child("users").child(it).child("firstName").get().addOnSuccessListener { snapshot ->
@@ -42,13 +42,13 @@ class AccountFragment : Fragment() {
             }
         }
 
-        // 连接设置按钮并添加点击事件
+        // setting button
         val settingsButton = view.findViewById<ImageButton>(R.id.settings_button)
         settingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_accountInfoFragment)
         }
 
-        // 加载 ReviewFragment 到容器中
+        // load ReviewFragment
         childFragmentManager.beginTransaction()
             .replace(R.id.review_fragment_container, ReviewFragment())
             .commit()

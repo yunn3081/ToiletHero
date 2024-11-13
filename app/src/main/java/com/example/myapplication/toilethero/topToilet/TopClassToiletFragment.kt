@@ -34,7 +34,7 @@ class TopClassToiletFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewTopToilets)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        // 初始化 Firebase 数据库引用
+        // initialize firebase
         database = FirebaseDatabase.getInstance().getReference("restrooms")
 
         fetchTopTenToilets()
@@ -56,23 +56,23 @@ class TopClassToiletFragment : Fragment() {
 
                         toiletsList.add(toilet)
                     }
-                    // 按评分降序排序
+                    // sort toilet in descending order
                     toiletsList.sortByDescending { it.averageOverallScore }
 
-                    // 初始化 Adapter 並設置到 RecyclerView
+                    // init Adapter to RecyclerView
                     toiletAdapter = ToiletAdapter(toiletsList) { roomID ->
                         navigateToToiletProfile(roomID)
                     }
                     recyclerView.adapter = toiletAdapter
 
-                    // 添加 ItemDecoration 設置項之間的間距
+                    // set space between ItemDecoration
                     recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
                         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                             outRect.bottom = 16 // 設置底部間距為 16dp
                         }
                     })
 
-                    // 通知 Adapter 更新資料
+                    // info update
                     toiletAdapter.notifyDataSetChanged()
                 }
 
