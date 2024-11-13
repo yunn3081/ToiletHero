@@ -114,6 +114,7 @@ class AccountInfoFragment : Fragment() {
         emailEditText.isEnabled = enable
         phoneEditText.isEnabled = enable
         dobEditText.isEnabled = enable
+        changeInfoButton.visibility = if (enable) View.GONE else View.VISIBLE
         saveChangeButton.visibility = if (enable) View.VISIBLE else View.GONE
     }
 }
