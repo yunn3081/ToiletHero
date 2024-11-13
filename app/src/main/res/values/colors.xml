@@ -15,4 +15,6 @@
     <color name="buttonColor">#3F51B5</color>
     <color name="gray">#BDBDBD</color>
 
+    <color name="colorStar">#FFD306</color>
+    <color name="ratingbar_inactive">#FFED97</color>
 </resources>

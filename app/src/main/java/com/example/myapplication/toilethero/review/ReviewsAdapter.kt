@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.google.firebase.database.DatabaseReference
@@ -60,7 +61,7 @@ class ReviewsAdapter(
     private fun setEditable(holder: ReviewViewHolder, editable: Boolean) {
         holder.reviewTitleEditText.isEnabled = editable
         holder.reviewBodyEditText.isEnabled = editable
-        holder.ratingBar.isEnabled = editable
+        holder.ratingBar.setIsIndicator(!editable) // Use setIsIndicator() to toggle interactivity
         holder.isEditable = editable
     }
 
@@ -103,11 +104,9 @@ class ReviewsAdapter(
             currentUserId?.let {
                 database.child("reviews").child(it).child(review.reviewID.toString()).updateChildren(updates)
             }
-            setEditable(holder, false)
-            holder.editButton.text = "Edit"
+            setEditable(holder, false) // Disable edit mode after saving
         } else {
-            setEditable(holder, true)
-            holder.editButton.text = "Save"
+            setEditable(holder, true) // Enable edit mode
         }
     }
 
