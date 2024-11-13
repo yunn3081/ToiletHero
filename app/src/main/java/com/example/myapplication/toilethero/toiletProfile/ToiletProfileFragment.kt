@@ -51,6 +51,8 @@ class ToiletProfileFragment : Fragment() {
     private lateinit var reviewsAdapter: ReviewsAdapter
     private var reviewList = mutableListOf<Review>()
     private lateinit var noReviewsTextView: TextView
+    private lateinit var directionIcon: ImageView
+    private var gpsCoordinates: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +72,7 @@ class ToiletProfileFragment : Fragment() {
         restroomImageView = view.findViewById(R.id.restroom_image)
         loadingSpinner = view.findViewById(R.id.loadingSpinner)
         noReviewsTextView = view.findViewById(R.id.no_reviews_text_view)
+        directionIcon = view.findViewById(R.id.direction_icon) // 導航圖標
 
         val roomID = arguments?.getString("roomID") ?: return view
 
@@ -110,6 +113,16 @@ class ToiletProfileFragment : Fragment() {
 
         }
 
+        Log.d("ToiletProfileFragment", "Fetched GPS Coordinate: $gpsCoordinates")
+
+        directionIcon.setOnClickListener {
+            gpsCoordinates?.let { coordinates ->
+                // 打印出 gpsCoordinates
+                Log.d("ToiletProfileFragment", "GPS Coordinates: $coordinates")
+                openGoogleMapsNavigation(coordinates)
+            } ?: Toast.makeText(context, "GPS coordinates not available", Toast.LENGTH_SHORT).show()
+        }
+
         return view
     }
 
@@ -123,8 +136,9 @@ class ToiletProfileFragment : Fragment() {
                         val address = snapshot.child("street").getValue(String::class.java) ?: "Unknown"
                         val rating = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
                         val reviewsCount = snapshot.child("reviewsCount").getValue(Long::class.java) ?: 0
-                        val gpsCoordinates = snapshot.child("gpsCoordinates").getValue(String::class.java)
+                        gpsCoordinates = snapshot.child("gpsCoordinates").getValue(String::class.java) // 賦值給成員變數
 
+                        // 更新 UI
                         toiletName.text = name
                         toiletRoomNumber.text = roomNumber
                         toiletAddress.text = address
@@ -132,6 +146,7 @@ class ToiletProfileFragment : Fragment() {
                         ratingStats.text = "$rating ★ | $reviewsCount Reviews"
 
                         gpsCoordinates?.let {
+                            Log.d("ToiletProfileFragment", "Fetched GPS Coordinates: $gpsCoordinates")
                             val (latitude, longitude) = it.split(",").map { coord -> coord.trim().toDouble() }
                             fetchPlaceId(latitude, longitude) { placeIds ->
                                 placeIds?.let {
@@ -147,6 +162,19 @@ class ToiletProfileFragment : Fragment() {
                 Log.e("ToiletProfileFragment", "Error fetching data", error.toException())
             }
         })
+    }
+
+
+    private fun openGoogleMapsNavigation(coordinates: String) {
+        val (latitude, longitude) = coordinates.split(",").map { it.trim() }
+        val uri = "google.navigation:q=$latitude,$longitude"
+        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(uri))
+        intent.setPackage("com.google.android.apps.maps")
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent)
+        } else {
+            Toast.makeText(context, "Google Maps app is not installed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun fetchPlaceId(latitude: Double, longitude: Double, callback: (List<String>?) -> Unit) {

@@ -16,14 +16,30 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 廁所名稱 -->
-            <TextView
-                android:id="@+id/toilet_name"
+            <!-- 廁所名稱與導航圖標並排 -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading name..."
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- 廁所名稱 -->
+                <TextView
+                    android:id="@+id/toilet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading name..."
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <!-- 導航圖標 -->
+                <ImageView
+                    android:id="@+id/direction_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_direction" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/toilet_roomNumber"
@@ -73,7 +89,6 @@
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
 
-
             <!-- 評分統計 -->
             <TextView
                 android:id="@+id/rating_stats"
@@ -82,76 +97,76 @@
                 android:text="Loading stats..."
                 android:textSize="18sp" />
 
-                <!-- 使用者新增評論 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add your review"
-                    android:textSize="20sp"
-                    android:layout_marginTop="16dp"
-                    android:textStyle="bold" />
+            <!-- 使用者新增評論 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add your review"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold" />
 
+            <!-- 評分 -->
+            <RatingBar
+                android:id="@+id/toilet_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1"
+                android:rating="0.0"
+                android:scaleX="1"
+                android:scaleY="1" />
 
-                <!-- 評分 -->
-                <RatingBar
-                    android:id="@+id/toilet_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="1"
-                    android:rating="0.0"
-                    android:scaleX="1"
-                    android:scaleY="1" />
+            <EditText
+                android:id="@+id/review_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title" />
 
-                <EditText
-                    android:id="@+id/review_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Title" />
+            <EditText
+                android:id="@+id/review_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Write down your review..." />
 
-                <EditText
-                    android:id="@+id/review_body"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Write down your review..." />
+            <Button
+                android:id="@+id/submit_review_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/submit_review_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Submit"
-                    android:visibility="gone"/>
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log in to Submit"
+                android:layout_marginTop="8dp" />
 
-                <Button
-                    android:id="@+id/login_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Log in to Submit"
-                    android:layout_marginTop="8dp"/>
-        <TextView
-            android:id="@+id/review_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reviews"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/review_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reviews"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reviews_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="36dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="36dp" />
 
-        <TextView
-            android:id="@+id/no_reviews_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="No reviews available"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/no_reviews_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No reviews available"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
