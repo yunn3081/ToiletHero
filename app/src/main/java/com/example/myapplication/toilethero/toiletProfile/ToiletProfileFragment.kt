@@ -122,7 +122,7 @@ class ToiletProfileFragment : Fragment() {
                         val roomNumber = snapshot.child("roomNumber").getValue(String::class.java) ?: "Unknown"
                         val address = snapshot.child("street").getValue(String::class.java) ?: "Unknown"
                         val rating = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
-                        val reviewsCount = snapshot.child("reviews_count").getValue(Long::class.java) ?: 0
+                        val reviewsCount = snapshot.child("reviewsCount").getValue(Long::class.java) ?: 0
                         val gpsCoordinates = snapshot.child("gpsCoordinates").getValue(String::class.java)
 
                         toiletName.text = name
@@ -282,26 +282,51 @@ class ToiletProfileFragment : Fragment() {
             return
         }
 
-        val reviewID = database_reviews.child(roomID).push().key ?: return // Generate a review ID under roomID
-        val review = mapOf(
-            "userID" to userID,
-            "reviewTitle" to title,
-            "reviewBody" to body,
-            "rating" to rating
-        )
-        print(roomID)
+        // 從 Firebase 中讀取當前的 `averageOverallScore` 和 `reviewsCount`
+        database_restrooms.child(roomID).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val currentScore = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
+//                    val reviewsCount = snapshot.child("reviewsCount").getValue(Long::class.java) ?: 0
 
-        // Store the review under "reviews/{roomID}/{reviewID}" without including reviewID as a field
-        database_reviews.child(roomID).child(reviewID).setValue(review)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
-                reviewTitle.text.clear()
-                reviewBody.text.clear()
-                toiletRating.rating = 0.0f
+                    val actualReviewCount = snapshot.childrenCount // 獲取實際評論數量
+                    // 計算新的 `averageOverallScore` 和增加 `reviewsCount`
+                    val updatedCount = actualReviewCount + 1
+                    val updatedScore = ((currentScore * actualReviewCount) + rating) / updatedCount
+
+                    // 構建評論和更新的數據
+                    val reviewID = database_reviews.child(roomID).push().key ?: return
+                    val review = mapOf(
+                        "userID" to userID,
+                        "reviewTitle" to title,
+                        "reviewBody" to body,
+                        "rating" to rating
+                    )
+
+                    val updates = mapOf(
+                        "reviews/$roomID/$reviewID" to review,
+                        "restrooms/$roomID/averageOverallScore" to updatedScore,
+                        "restrooms/$roomID/reviewsCount" to updatedCount
+                    )
+
+                    // 將評論和更新後的 `averageOverallScore` 及 `reviewsCount` 一起寫入 Firebase
+                    FirebaseDatabase.getInstance().reference.updateChildren(updates)
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
+                            reviewTitle.text.clear()
+                            reviewBody.text.clear()
+                            toiletRating.rating = 0.0f // 重置評分為 0
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ToiletProfileFragment", "Error updating average score", error.toException())
             }
+        })
     }
 
     // Check if user is logged in to show/hide the appropriate buttons
