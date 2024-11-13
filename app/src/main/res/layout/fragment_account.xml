@@ -22,12 +22,12 @@
             android:text="Hi, User!"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:paddingEnd="8dp"/>
+            android:paddingEnd="0dp"/>
 
         <!-- 设置按钮 -->
         <ImageButton
             android:id="@+id/settings_button"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/ic_settings"
