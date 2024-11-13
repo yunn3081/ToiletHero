@@ -13,12 +13,15 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/room_id_text"
+        <TextView
+            android:id="@+id/room_name_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Room ID"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:hint="Room Name"
             android:enabled="false"
             android:background="@android:color/transparent"
             android:paddingBottom="0dp"
