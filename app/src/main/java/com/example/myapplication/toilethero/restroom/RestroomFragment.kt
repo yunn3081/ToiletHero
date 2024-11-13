@@ -13,7 +13,6 @@ import com.example.myapplication.R
  * create an instance of this fragment.
  */
 class RestroomFragment : Fragment() {
-    // 定義參數常量
     companion object {
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
@@ -35,7 +34,7 @@ class RestroomFragment : Fragment() {
             }
     }
 
-    // 定義接收的參數
+    // init parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -51,7 +50,7 @@ class RestroomFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // 為該 Fragment 加載佈局
+        // inflate Fragment
         return inflater.inflate(R.layout.fragment_restroom, container, false)
     }
 }

@@ -34,14 +34,13 @@ class AccountInfoFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_account_info, container, false)
 
-        // 初始化 FirebaseAuth 和 Firebase Database
+        // init FirebaseAuth and Firebase Database
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().getReference("users")
 
-        // 获取当前用户的ID
+        // getID
         userId = auth.currentUser?.uid ?: ""
 
-        // 连接 UI 元素
         firstNameEditText = view.findViewById(R.id.first_name_edit_text)
         lastNameEditText = view.findViewById(R.id.last_name_edit_text)
         emailEditText = view.findViewById(R.id.email_edit_text)
@@ -51,21 +50,21 @@ class AccountInfoFragment : Fragment() {
         saveChangeButton = view.findViewById(R.id.save_change_button)
         logoutButton = view.findViewById(R.id.logout_button) // 初始化 Logout 按钮
 
-        // 从Firebase读取用户数据
+//        get user info from firebase
         getUserInfo()
 
-        // 设置"Change Information"按钮点击事件
+        // set "Change Information" button
         changeInfoButton.setOnClickListener {
             enableEditing(true)
         }
 
-        // 设置"Save Change"按钮点击事件
+        // set "Save Change" botton
         saveChangeButton.setOnClickListener {
             updateUserInfo()
             enableEditing(false)
         }
 
-        // 设置 Logout 按钮点击事件
+        // set  Logout  button
         logoutButton.setOnClickListener {
             auth.signOut() // 执行 Firebase 的登出操作
             findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment) // 导航到登录页面
@@ -87,7 +86,6 @@ class AccountInfoFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // 处理错误
             }
         })
     }
@@ -116,6 +114,7 @@ class AccountInfoFragment : Fragment() {
         emailEditText.isEnabled = enable
         phoneEditText.isEnabled = enable
         dobEditText.isEnabled = enable
+        changeInfoButton.visibility = if (enable) View.GONE else View.VISIBLE
         saveChangeButton.visibility = if (enable) View.VISIBLE else View.GONE
     }
 }

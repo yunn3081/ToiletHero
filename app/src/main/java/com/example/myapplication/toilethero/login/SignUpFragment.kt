@@ -27,11 +27,11 @@ class SignUpFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
 
-        // 初始化 FirebaseAuth 和 Firebase Realtime Database
+        // init FirebaseAuth 和 Firebase Realtime Database
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // 連接 UI 元素
+        // connect UI
         val emailEditText = view.findViewById<EditText>(R.id.email)
         val passwordEditText = view.findViewById<EditText>(R.id.password) // 新增密碼欄位
         val firstNameEditText = view.findViewById<EditText>(R.id.first_name)
@@ -40,7 +40,7 @@ class SignUpFragment : Fragment() {
         val dobEditText = view.findViewById<EditText>(R.id.date_of_birth)
         val signUpButton = view.findViewById<Button>(R.id.signup_button)
 
-        // 註冊按鈕的點擊事件
+        // sign up on click
         signUpButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim() // 使用用戶輸入的密碼
@@ -49,32 +49,32 @@ class SignUpFragment : Fragment() {
             val phone = phoneEditText.text.toString().trim()
             val dob = dobEditText.text.toString().trim()
 
-            // 檢查是否輸入了 email 和 password
+            // check if email and password is empty
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 使用 FirebaseAuth 註冊帳戶
+            // use FirebaseAuth to signup
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // 获取当前用户的 UID
+                        // get UID
                         val userId = auth.currentUser?.uid
 
-                        // 構建用戶對象
+                        // setup user
                         val user = User(userId, firstName, lastName, email, phone, dob)
 
-                        // 将用户信息保存到 Firebase Realtime Database
+                        // save user info to Firebase Realtime Database
                         if (userId != null) {
                             database.child("users").child(userId).setValue(user)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        // 保存成功后导航到 AccountFragment
+                                        // redirect to  AccountFragment
                                         findNavController().navigate(R.id.action_signUpFragment_to_accountFragment)
                                         Toast.makeText(context, "Sign up successful!", Toast.LENGTH_SHORT).show()
                                     } else {
-                                        // 保存失敗，打印錯誤信息
+                                        // if fail to save info, then return with error
                                         Log.e("DatabaseError", "Error: ${task.exception?.message}")
                                         Toast.makeText(
                                             context,
@@ -86,7 +86,7 @@ class SignUpFragment : Fragment() {
                         }
 
                     } else {
-                        // 註冊失敗，打印錯誤信息
+                        // if fail to signup, then return with error
                         Log.e("SignUpError", "Error: ${task.exception?.message}")
                         Toast.makeText(
                             context,
@@ -100,7 +100,7 @@ class SignUpFragment : Fragment() {
         return view
     }
 
-    // 用戶數據模型
+    // create user data type
     data class User(
         val userId: String?,
         val firstName: String,

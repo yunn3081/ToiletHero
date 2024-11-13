@@ -1,5 +1,4 @@
 package com.example.myapplication.toilethero.review
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,16 +28,16 @@ class ReviewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_review, container, false)
 
-        // 初始化 FirebaseAuth 和 Firebase Database
+        // init FirebaseAuth and Firebase Database
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // 連接 UI 元素
+        // connect UI
         val createReviewButton = view.findViewById<Button>(R.id.create_review_button)
         noReviewsTextView = view.findViewById(R.id.no_reviews_text_view)
         val recyclerView = view.findViewById<RecyclerView>(R.id.reviews_recycler_view)
 
-        // 設置 RecyclerView
+        // set RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         reviewAdapter = ReviewsAdapter(reviewList, database, auth.currentUser?.uid, true)
         recyclerView.adapter = reviewAdapter
@@ -50,7 +49,7 @@ class ReviewFragment : Fragment() {
         //     }
         // })
 
-        // 設置創建評論按鈕
+        // created a review button
         createReviewButton.setOnClickListener {
             findNavController().navigate(R.id.action_reviewFragment_to_createReviewFragment)
         }

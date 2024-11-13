@@ -25,33 +25,33 @@ class EditReviewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_edit_review, container, false)
 
-        // 初始化 Firebase
+        // init Firebase
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // 連接 UI 元素
+        // connect UI
         val roomIdEditText = view.findViewById<EditText>(R.id.room_id_edit)
         val commentEditText = view.findViewById<EditText>(R.id.comment_edit)
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar_edit)
         val saveButton = view.findViewById<Button>(R.id.save_button)
 
-        // 從 Bundle 中提取數據
+        // get data from Bundle
         reviewId = arguments?.getString("reviewId")
         val roomId = arguments?.getString("roomId")
         val comment = arguments?.getString("comment")
         val star = arguments?.getFloat("star")
 
-        // 設置初始數據
+        // some initializations
         roomIdEditText.setText(roomId)
         commentEditText.setText(comment)
         ratingBar.rating = star ?: 0f
 
-        // 保存按鈕的點擊事件
+        // save button on click
         saveButton.setOnClickListener {
             val updatedComment = commentEditText.text.toString()
             val updatedStar = ratingBar.rating
 
-            // 更新評論
+            // update reviews
             val updates = mapOf("comment" to updatedComment, "star" to updatedStar)
             reviewId?.let {
                 database.child("reviews").child(auth.currentUser!!.uid).child(it).updateChildren(updates)
