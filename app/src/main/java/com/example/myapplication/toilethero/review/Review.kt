@@ -6,5 +6,5 @@ data class Review(
     val userID: Any? = null,
     val reviewTitle: String = "",
     val reviewBody: String = "",
-    val rating: Any? = null
+    val rating: Any? = null,
 )

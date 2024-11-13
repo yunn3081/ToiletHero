@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -24,6 +25,7 @@ class AccountInfoFragment : Fragment() {
     private lateinit var dobEditText: EditText
     private lateinit var changeInfoButton: Button
     private lateinit var saveChangeButton: Button
+    private lateinit var logoutButton: Button // 新增
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +49,7 @@ class AccountInfoFragment : Fragment() {
         dobEditText = view.findViewById(R.id.dob_edit_text)
         changeInfoButton = view.findViewById(R.id.change_info_button)
         saveChangeButton = view.findViewById(R.id.save_change_button)
+        logoutButton = view.findViewById(R.id.logout_button) // 初始化 Logout 按钮
 
         // 从Firebase读取用户数据
         getUserInfo()
@@ -59,7 +62,13 @@ class AccountInfoFragment : Fragment() {
         // 设置"Save Change"按钮点击事件
         saveChangeButton.setOnClickListener {
             updateUserInfo()
-            enableEditing(false) // 禁用编辑状态
+            enableEditing(false)
+        }
+
+        // 设置 Logout 按钮点击事件
+        logoutButton.setOnClickListener {
+            auth.signOut() // 执行 Firebase 的登出操作
+            findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment) // 导航到登录页面
         }
 
         return view
@@ -84,7 +93,6 @@ class AccountInfoFragment : Fragment() {
     }
 
     private fun updateUserInfo() {
-        // 更新用户信息到Firebase
         val updatedData = mapOf(
             "firstName" to firstNameEditText.text.toString(),
             "lastName" to lastNameEditText.text.toString(),

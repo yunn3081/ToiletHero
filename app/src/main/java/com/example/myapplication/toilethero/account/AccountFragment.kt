@@ -4,56 +4,60 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.toilethero.review.ReviewFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class AccountFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
-        // 初始化 FirebaseAuth
+        // 初始化 FirebaseAuth 和 FirebaseDatabase
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().reference
 
-        // 連接 UI 元素
-        val logoutButton = view.findViewById<Button>(R.id.logout_button)
-        val reviewButton = view.findViewById<Button>(R.id.review_button) // 新增的按鈕
+        // 获取问候文本的 TextView
+        val greetingText = view.findViewById<TextView>(R.id.greetingText)
 
-        // 設置登出按鈕的點擊事件
-        logoutButton.setOnClickListener {
-            auth.signOut()  // 執行 Firebase 的登出操作
-            // 登出後導航回登入頁面 (NotificationsFragment)
-            findNavController().navigate(R.id.action_accountFragment_to_notificationsFragment)
+        // 从 Firebase 获取用户的 FName 并设置问候语
+        val userId = auth.currentUser?.uid
+        userId?.let {
+            database.child("users").child(it).child("firstName").get().addOnSuccessListener { snapshot ->
+                val firstName = snapshot.getValue(String::class.java) ?: "User"
+                greetingText.text = "Hi, $firstName!"
+            }
         }
 
-        // 設置 My Information 按鈕的點擊事件
-        val myInfoButton = view.findViewById<Button>(R.id.my_info_button)
-        myInfoButton.setOnClickListener {
-            // 導航到 AccountInfoFragment
+        // 连接设置按钮并添加点击事件
+        val settingsButton = view.findViewById<ImageButton>(R.id.settings_button)
+        settingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_accountInfoFragment)
         }
-        // 設置導航到 Review 頁面的按鈕點擊事件
-        reviewButton.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_reviewFragment)
-        }
+
+        // 加载 ReviewFragment 到容器中
+        childFragmentManager.beginTransaction()
+            .replace(R.id.review_fragment_container, ReviewFragment())
+            .commit()
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // 隐藏返回按钮
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 }
