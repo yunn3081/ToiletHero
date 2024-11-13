@@ -4,30 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".toilethero.account.AccountInfoFragment">
 
-    <!-- First Name Label -->
+    <!-- Title -->
+    <TextView
+        android:id="@+id/account_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account Information"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- First Name -->
     <TextView
         android:id="@+id/label_first_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="First Name"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_info_title"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        android:layout_marginTop="8dp"/>
 
-    <!-- First Name Editable -->
     <EditText
         android:id="@+id/first_name_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/label_first_name"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Last Name Label -->
+    <!-- Last Name -->
     <TextView
         android:id="@+id/label_last_name"
         android:layout_width="wrap_content"
@@ -36,19 +53,21 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/first_name_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <!-- Last Name Editable -->
     <EditText
         android:id="@+id/last_name_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/label_last_name"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Email Label -->
+    <!-- Email -->
     <TextView
         android:id="@+id/label_email"
         android:layout_width="wrap_content"
@@ -57,19 +76,21 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/last_name_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <!-- Email Editable -->
     <EditText
         android:id="@+id/email_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/label_email"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Phone Label -->
+    <!-- Phone -->
     <TextView
         android:id="@+id/label_phone"
         android:layout_width="wrap_content"
@@ -78,19 +99,21 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/email_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <!-- Phone Editable -->
     <EditText
         android:id="@+id/phone_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/label_phone"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
-    <!-- DOB Label -->
+    <!-- Date of Birth -->
     <TextView
         android:id="@+id/label_dob"
         android:layout_width="wrap_content"
@@ -99,46 +122,57 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/phone_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <!-- DOB Editable -->
     <EditText
         android:id="@+id/dob_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edit_text"
+        android:padding="12dp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/label_dob"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
     <!-- Change Information Button -->
     <Button
         android:id="@+id/change_info_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Change Information"
+        android:backgroundTint="@color/buttonColor"
+        android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/dob_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
 
-    <!-- Save Change Button (Initially hidden) -->
+    <!-- Save Change Button -->
     <Button
         android:id="@+id/save_change_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Save Change"
+        android:text="Save Changes"
+        android:backgroundTint="@color/buttonColor"
+        android:textColor="@android:color/white"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/change_info_button"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
     <!-- Logout Button -->
     <Button
         android:id="@+id/logout_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Logout"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/save_change_button"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

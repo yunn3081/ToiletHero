@@ -43,10 +43,10 @@ class ReviewFragment : Fragment() {
         reviewAdapter = ReviewsAdapter(reviewList, database, auth.currentUser?.uid, true)
         recyclerView.adapter = reviewAdapter
 
-        // 移除 ItemDecoration，這樣評論之間不會有額外的間距
+        // remove ItemDecoration，for deleting the extra space between each review
         // recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
         //     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        //         outRect.bottom = 8  // 刪除這個間距
+        //         outRect.bottom = 8
         //     }
         // })
 
@@ -55,7 +55,7 @@ class ReviewFragment : Fragment() {
             findNavController().navigate(R.id.action_reviewFragment_to_createReviewFragment)
         }
 
-        // 讀取用戶評論
+        // fetch users' review
         fetchUserReviews()
 //        loadReviews()
 
