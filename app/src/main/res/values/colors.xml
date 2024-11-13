@@ -12,4 +12,7 @@
     <color name="colorAccent">#566D7E</color> <!-- Medium blue shade -->
     <color name="colorSecondary">#857F72</color> <!-- Brownish shade -->
     <color name="colorBackground">#D3CBB8</color> <!-- Light beige shade -->
+    <color name="buttonColor">#3F51B5</color>
+    <color name="gray">#BDBDBD</color>
+
 </resources>
