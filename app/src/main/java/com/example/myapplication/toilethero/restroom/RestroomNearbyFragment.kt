@@ -149,7 +149,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     location?.let {
                         val currentLatLng = LatLng(it.latitude, it.longitude)
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 18f))
                         viewModel.cameraPosition = map.cameraPosition
                     }
                 }
@@ -220,7 +220,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
 
     private fun getBitmapDescriptorFromResource(resourceId: Int): BitmapDescriptor {
         val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
-        val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, 70, 70, false)
+        val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, 150, 150, false)
         return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
     }
 }
