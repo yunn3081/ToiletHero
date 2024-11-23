@@ -24,14 +24,17 @@ import com.google.firebase.database.*
 
 class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var map: GoogleMap
+    lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var database: DatabaseReference
-    private val viewModel: RestroomMapViewModel by activityViewModels()
-    private var markers = mutableMapOf<String, Marker>() // Store markers by restroom ID
+    lateinit var database: DatabaseReference
+    val viewModel: RestroomMapViewModel by activityViewModels()
+    var markers = mutableMapOf<String, Marker>() // Store markers by restroom ID
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+    open fun getVisibleBounds(): LatLngBounds? {
+        return map?.projection?.visibleRegion?.latLngBounds
     }
 
     override fun onCreateView(
@@ -103,7 +106,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun enableLocationOnMap() {
+    fun enableLocationOnMap() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -137,7 +140,7 @@ class RestroomNearbyFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun loadRestroomsInVisibleRegion() {
+    fun loadRestroomsInVisibleRegion() {
         val bounds = map.projection.visibleRegion.latLngBounds
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

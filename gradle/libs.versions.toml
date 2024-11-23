@@ -22,6 +22,7 @@ playServicesMaps = "18.1.0"
 playServicesMapsVersion = "17.0.0"
 playServicesLocation = "21.3.0"
 secretsGradlePlugin = "2.0.1"
+junitKtx = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,7 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 play-services-maps-v1700 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

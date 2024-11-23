@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.play.services.location)
     // Glide for image loading (added dependency)
     implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.androidx.junit.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -75,5 +76,44 @@ dependencies {
     implementation(libs.play.services.maps.v1700)
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
+
+    // Unit Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
+    // MockK
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    // Robolectric
+    testImplementation("org.robolectric:robolectric:4.10")
+
+    // Android Test Utilities for Unit Tests
+    testImplementation("androidx.test:core:1.5.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.0")
+
+    // Logging for Tests
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+
+    // Instrumented Tests (Android Tests)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.0")
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
+    androidTestImplementation("com.google.truth:truth:1.1.3")
+
+    // Debug variants for testing
+    debugImplementation("androidx.fragment:fragment-testing:1.6.0")
+
+
 
 }
