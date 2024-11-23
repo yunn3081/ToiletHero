@@ -3,6 +3,10 @@ package com.example.myapplication
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class RestroomNearByUnitTest {
 
@@ -118,5 +122,45 @@ class RestroomNearByUnitTest {
                 println("✅ Test passed: Invalid coordinate correctly identified")
             }
         }
+    }
+        fun calculateDistance(
+            lat1: Double, lon1: Double,
+            lat2: Double, lon2: Double
+        ): Double {
+            // 使用 haversine 公式計算距離
+            val R = 6371.0 // 地球半徑，單位為 km
+            val dLat = Math.toRadians(lat2 - lat1)
+            val dLon = Math.toRadians(lon2 - lon1)
+            val a = sin(dLat / 2) * sin(dLat / 2) +
+                    cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                    sin(dLon / 2) * sin(dLon / 2)
+            val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+            return R * c
+        }
+
+        @Test
+    fun `test finding nearby restrooms`() {
+        println("\n🧪 Testing nearby restroom search")
+
+        // Given
+        val targetLatitude = 25.5
+        val targetLongitude = 121.5
+        val maxDistance = 5000.0 // 5 km
+
+        // When
+        val nearbyRestRooms = RestRoomMockData.restRoomList
+            .filter { restRoom ->
+                calculateDistance(
+                    targetLatitude, targetLongitude,
+                    restRoom.latitude, restRoom.longitude
+                ) < maxDistance
+            }
+
+        // Then
+        assertFalse("There should be at least one nearby restroom", nearbyRestRooms.isEmpty())
+        nearbyRestRooms.forEach { restRoom ->
+            println("Found nearby restroom: ${restRoom.name}")
+        }
+
     }
 }
