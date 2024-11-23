@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/toiletProfileFragment"
         android:name="com.example.myapplication.toilethero.toiletProfile.ToiletProfileFragment"
-        android:label="Toilet Profile" />
+        android:label="@string/toilet_prof" />
         <action
         android:id="@+id/action_toiletProfileFragment_to_loginFragment"
         app:destination="@id/navigation_notifications" />
@@ -27,21 +27,21 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.myapplication.toilethero.login.LoginFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/account_info"
         tools:layout="@layout/fragment_login" />
 
     <!-- Sign Up Fragment -->
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.myapplication.toilethero.signup.SignUpFragment"
-        android:label="Sign Up"
+        android:label="@string/sign_up"
         tools:layout="@layout/fragment_sign_up" />
 
     <!-- Account Fragment -->
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.example.myapplication.toilethero.account.AccountFragment"
-        android:label="Account Page"
+        android:label="@string/title_notifications"
         tools:layout="@layout/fragment_account" >
 
         <!-- Action from AccountFragment to AccountInfoFragment -->
@@ -54,14 +54,14 @@
     <fragment
         android:id="@+id/accountInfoFragment"
         android:name="com.example.myapplication.toilethero.account.AccountInfoFragment"
-        android:label="Account Information"
+        android:label="@string/account_info"
         tools:layout="@layout/fragment_account_info" />
 
     <!-- Notifications Fragment (Login) -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.myapplication.toilethero.login.LoginFragment"
-        android:label="Login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login">
         <argument
             android:name="returnToReviewPage"
@@ -132,7 +132,7 @@
     <fragment
         android:id="@+id/navigation_restroom_nearby"
         android:name="com.example.myapplication.toilethero.restroom.RestroomNearbyFragment"
-        android:label="Restroom Nearby"
+        android:label="@string/title_restroom_nearby"
         tools:layout="@layout/fragment_restroom_nearby"
         tools:ignore="DuplicateIds">
 
@@ -146,7 +146,7 @@
     <fragment
         android:id="@+id/restroomReviewFragment"
         android:name="com.example.myapplication.toilethero.review.RestroomReviewFragment"
-        android:label="Restroom Review"
+        android:label="@string/restroom_review"
         tools:layout="@layout/fragment_restroom_review" />
 
     <fragment

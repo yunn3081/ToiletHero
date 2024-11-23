@@ -33,12 +33,14 @@ class AccountFragment : Fragment() {
         // get greeting TextView
         val greetingText = view.findViewById<TextView>(R.id.greetingText)
 
-        // get user's first name from Firebase and creating greetings
         val userId = auth.currentUser?.uid
         userId?.let {
             database.child("users").child(it).child("firstName").get().addOnSuccessListener { snapshot ->
                 val firstName = snapshot.getValue(String::class.java) ?: "User"
-                greetingText.text = "Hi, $firstName!"
+                val greeting = getString(R.string.greeting, firstName)
+                greetingText.text = greeting
+            }.addOnFailureListener {
+                greetingText.text = getString(R.string.greeting, "User")
             }
         }
 

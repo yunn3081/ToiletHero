@@ -1,7 +1,9 @@
 package com.example.myapplication
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication.databinding.ActivityMainBinding
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +26,11 @@ class MainActivity : AppCompatActivity() {
         // Initialize View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Set up the custom Toolbar as ActionBar
+        val toolbar = binding.topAppBar // Ensure this ID matches your XML definition
+        setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(resources.getColor(android.R.color.white, theme))
 
         // Set up the BottomNavigationView
         val navView: BottomNavigationView = binding.navView
@@ -38,18 +46,53 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Apply full-screen layout
-        setFullScreenMode()
+//        setFullScreenMode()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu to add the language icon and options
+        menuInflater.inflate(R.menu.language_menu, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.english -> {
+                setAppLocale("en")
+                true
+            }
+            R.id.chinese -> {
+                setAppLocale("zh")
+                true
+            }
             android.R.id.home -> {
-                onBackPressed()
+                onBackPressedDispatcher.onBackPressed() // Proper back navigation
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun setAppLocale(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+
+        // Restart the activity to apply the language change
+        recreate()
+    }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                onBackPressed()
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     private fun setFullScreenMode() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE

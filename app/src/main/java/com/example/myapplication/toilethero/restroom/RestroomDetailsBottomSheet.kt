@@ -1,5 +1,6 @@
 package com.example.myapplication.toilethero.restroom
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -69,6 +70,7 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
 
         restroomId?.let { id ->
             database.child("restrooms").child(id).addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("StringFormatMatches")
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val buildingName = snapshot.child("buildingName").getValue(String::class.java)
                     val address = snapshot.child("street").getValue(String::class.java)
@@ -77,7 +79,8 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
 
                     buildingNameTextView.text = buildingName ?: "No Name"
                     restroomAddressTextView.text = address ?: "No Address"
-                    ratingTextView.text = "Rating: ${rating ?: 0.0} ★"
+                    ratingTextView.text = ratingTextView.context.getString(R.string.rating_text, rating ?: 0.0)
+
 
                     gpsCoordinates?.let {
                         val (latitude, longitude) = it.split(",").map { coord -> coord.trim().toDouble() }

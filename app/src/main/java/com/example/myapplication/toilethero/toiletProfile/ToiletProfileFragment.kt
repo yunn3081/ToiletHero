@@ -144,6 +144,11 @@ class ToiletProfileFragment : Fragment() {
                         toiletAddress.text = address
                         toiletRating.rating = rating
                         ratingStats.text = "$rating ★ | $reviewsCount Reviews"
+                        ratingStats.text = ratingStats.context.getString(
+                            R.string.rating_stats,
+                            rating ?: 0.0,
+                            reviewsCount ?: 0
+                        )
 
                         gpsCoordinates?.let {
                             Log.d("ToiletProfileFragment", "Fetched GPS Coordinates: $gpsCoordinates")

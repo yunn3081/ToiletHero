@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">廁所英雄</string>
+    <string name="title_top_class_toilet">廁所排名</string>
+    <string name="title_restroom_nearby">附近的廁所</string>
+    <string name="title_notifications">我的帳號</string>
+    <string name="title_activity_maps">地圖活動</string>
+    <string name="sign_up">註冊</string>
+    <string name="login">登入</string>
+    <string name="account_info">會員資訊</string>
+    <string name="restroom_review">廁所評論</string>
+    <string name="language_switch">切換語言</string>
+    <string name="textTopClassToilet">前十名廁所</string>
+    <string name="toilet_prof">廁所資訊</string>
+    <string name="login_title">登入</string>
+    <string name="email">電子信箱</string>
+    <string name="password">密碼</string>
+    <string name="login_button">登入</string>
+    <string name="sign_up_button">註冊</string>
+    <string name="first_name">名字</string>
+    <string name="last_name">姓氏</string>
+    <string name="phone_number">電話號碼</string>
+    <string name="date_of_birth">生日</string>
+    <string name="change_info_button">更改資訊</string>
+    <string name="save_button">儲存更改</string>
+    <string name="logout_button">登出</string>
+    <string name="greeting">%1$s 您好!</string>
+    <string name="rating_text">評分: %1$s</string>
+    <string name="review_link">評論</string>
+    <string name="no_review">目前尚無評論</string>
+    <string name="login_to_submit">登入以進行評論</string>
+    <string name="submit_button">送出評論</string>
+    <string name="write_review">請寫下你的評論...</string>
+    <string name="title">標題</string>
+    <string name="add_review">新增評論</string>
+    <string name="loading_stats">載入資訊...</string>
+    <string name="rating_and_review">評分與評論</string>
+    <string name="loading_address">載入地址...</string>
+    <string name="loading_roomNumber">載入廁所號碼...</string>
+    <string name="loading_name">載入廁所名字...</string>
+    <string name="rating_stats">%1$s ★ | %2$s 評價</string>
+
+
+</resources>

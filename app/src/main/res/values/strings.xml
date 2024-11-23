@@ -4,6 +4,41 @@
     <string name="title_restroom_nearby">Restroom Nearby</string>
     <string name="title_notifications">My Account</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="account_info">Account Information</string>
+    <string name="restroom_review">Restroom Review</string>
+    <string name="language_switch">Switch Language</string>
+    <string name="textTopClassToilet">Top 10 Toilets</string>
+    <string name="toilet_prof">Toilet Profile</string>
+    <string name="login_title">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="sign_up_button">SIGN UP</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="change_info_button">Change Information</string>
+    <string name="save_button">Save Changes</string>
+    <string name="logout_button">Logout</string>
+    <string name="greeting">Hi, %1$s!</string>
+    <string name="rating_text">Rating: %1$s</string>
+    <string name="review_link">Reviews</string>
+    <string name="no_review">No reviews available</string>
+    <string name="login_to_submit">Log in to Submit</string>
+    <string name="submit_button">Submit</string>
+    <string name="write_review">Write down your review...</string>
+    <string name="title">Title</string>
+    <string name="add_review">Add your review</string>
+    <string name="loading_stats">Loading stats...</string>
+    <string name="rating_and_review">Rating and Reviews</string>
+    <string name="loading_address">Loading address...</string>
+    <string name="loading_roomNumber">Loading Room Number...</string>
+    <string name="loading_name">Loading name...</string>
+    <string name="rating_stats">%1$s ★ | %2$s Reviews</string>
+
+<!--    &lt;!&ndash; TODO: Remove or change this placeholder text &ndash;&gt;-->
+<!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
 </resources>

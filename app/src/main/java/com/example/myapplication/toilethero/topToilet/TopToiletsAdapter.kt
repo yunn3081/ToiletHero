@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,11 +43,10 @@ class ToiletAdapter(
         private val toiletName: TextView = itemView.findViewById(R.id.toiletName)
         private val toiletScore: TextView = itemView.findViewById(R.id.toiletScore)
 
+        @SuppressLint("StringFormatMatches")
         fun bind(toilet: Toilet) {
-            // set toiletName as roomNumber + buildingName
             toiletName.text = "${toilet.roomNumber} - ${toilet.buildingName}"
-            // set toiletScore as averageOverallScore
-            toiletScore.text = "Rating: ${toilet.averageOverallScore}"
+            toiletScore.text = itemView.context.getString(R.string.rating_text, toilet.averageOverallScore)
         }
     }
 }

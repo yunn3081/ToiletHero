@@ -28,7 +28,7 @@
                     android:id="@+id/toilet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Loading name..."
+                    android:text="@string/loading_name"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -45,7 +45,7 @@
                 android:id="@+id/toilet_roomNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading roomNumber..."
+                android:text="@string/loading_roomNumber"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -54,7 +54,7 @@
                 android:id="@+id/toilet_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading address..."
+                android:text="@string/loading_address"
                 android:textSize="16sp" />
 
             <FrameLayout
@@ -84,7 +84,7 @@
                 android:id="@+id/rating_reviews_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rating and Reviews"
+                android:text="@string/rating_and_review"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
@@ -94,14 +94,14 @@
                 android:id="@+id/rating_stats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading stats..."
+                android:text="@string/loading_stats"
                 android:textSize="18sp" />
 
             <!-- 使用者新增評論 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add your review"
+                android:text="@string/add_review"
                 android:textSize="20sp"
                 android:layout_marginTop="16dp"
                 android:textStyle="bold" />
@@ -121,33 +121,33 @@
                 android:id="@+id/review_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title" />
+                android:hint="@string/title" />
 
             <EditText
                 android:id="@+id/review_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Write down your review..." />
+                android:hint="@string/write_review" />
 
             <Button
                 android:id="@+id/submit_review_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="@string/submit_button"
                 android:visibility="gone" />
 
             <Button
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Log in to Submit"
+                android:text="@string/login_to_submit"
                 android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/review_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reviews"
+                android:text="@string/review_link"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
@@ -164,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="No reviews available"
+                android:text="@string/no_review"
                 android:textSize="16sp"
                 android:visibility="gone" />
         </LinearLayout>

@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Top 10 Toilets"
+        android:text="@string/textTopClassToilet"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -27,18 +27,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="48dp"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/textTopClassToilet"
-        app:layout_constraintBottom_toTopOf="@+id/space"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
     <!-- 用於避免按鈕被Nav Bar擋住的空隙，將高度調整為32dp -->
-    <View
-        android:id="@+id/space"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <View-->
+<!--        android:id="@+id/space"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="18dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
