@@ -17,7 +17,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         val googleMapsApiKey = if (project.hasProperty("GOOGLE_MAPS_API_KEY")) {
             project.property("GOOGLE_MAPS_API_KEY") as String
@@ -78,6 +77,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
 
+
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
@@ -109,9 +109,12 @@ dependencies {
     androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("com.google.truth:truth:1.1.3")
+    androidTestImplementation(project(":app")) // 替换 `:app` 为主模块的名称
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.0")
 
     // Debug variants
     debugImplementation("androidx.fragment:fragment-testing:1.6.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.1")
     implementation(kotlin("test"))
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")

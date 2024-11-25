@@ -1,4 +1,4 @@
-import com.example.myapplication.UserInfo
+import com.example.myapplication.models.UserInfo
 import com.example.myapplication.toilethero.account.AccountRepository
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
