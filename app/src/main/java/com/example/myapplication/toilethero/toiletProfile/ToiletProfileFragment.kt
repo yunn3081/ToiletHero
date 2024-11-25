@@ -28,22 +28,22 @@ import com.example.myapplication.toilethero.review.ReviewsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import okio.IOException
 
-class ToiletProfileFragment : Fragment() {
+class ToiletProfileFragment: Fragment() {
 
-    private lateinit var toiletName: TextView
+    lateinit var toiletName: TextView
     private lateinit var toiletRoomNumber: TextView
-    private lateinit var toiletAddress: TextView
+    lateinit var toiletAddress: TextView
     private lateinit var toiletRating: RatingBar
     private lateinit var ratingStats: TextView
-    private lateinit var reviewTitle: EditText
-    private lateinit var reviewBody: EditText
-    private lateinit var submitReviewButton: Button
+    lateinit var reviewTitle: EditText
+    lateinit var reviewBody: EditText
+    lateinit var submitReviewButton: Button
     private lateinit var loginButton: Button
     private lateinit var restroomImageView: ImageView
     private lateinit var loadingSpinner: ProgressBar
     private lateinit var database_restrooms: DatabaseReference
     private lateinit var database_reviews: DatabaseReference
-    private val handler = Handler(Looper.getMainLooper())
+    val handler = Handler(Looper.getMainLooper())
     private val timeoutDuration = 10000L // 10 seconds
     private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
     private val auth = FirebaseAuth.getInstance()
@@ -126,7 +126,7 @@ class ToiletProfileFragment : Fragment() {
         return view
     }
 
-    private fun fetchToiletDetails(roomID: String) {
+    fun fetchToiletDetails(roomID: String) {
         database_restrooms.child(roomID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 activity?.runOnUiThread {
@@ -320,10 +320,9 @@ class ToiletProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val currentScore = snapshot.child("averageOverallScore").getValue(Float::class.java) ?: 0f
-//                    val reviewsCount = snapshot.child("reviewsCount").getValue(Long::class.java) ?: 0
+                    val actualReviewCount = snapshot.child("reviewsCount").getValue(Long::class.java) ?: 0
 
-                    val actualReviewCount = snapshot.childrenCount // 獲取實際評論數量
-                    // 計算新的 `averageOverallScore` 和增加 `reviewsCount`
+                    // 計算新的 `averageOverallScore`
                     val updatedCount = actualReviewCount + 1
                     val updatedScore = ((currentScore * actualReviewCount) + rating) / updatedCount
 
@@ -342,16 +341,18 @@ class ToiletProfileFragment : Fragment() {
                         "restrooms/$roomID/reviewsCount" to updatedCount
                     )
 
-                    // 將評論和更新後的 `averageOverallScore` 及 `reviewsCount` 一起寫入 Firebase
+                    // 提交數據到 Firebase
                     FirebaseDatabase.getInstance().reference.updateChildren(updates)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
-                            reviewTitle.text.clear()
-                            reviewBody.text.clear()
-                            toiletRating.rating = 0.0f // 重置評分為 0
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(context, "Failed to submit review: ${e.message}", Toast.LENGTH_SHORT).show()
+                        .addOnCompleteListener { task ->
+
+
+                            if (task.isSuccessful) {
+                                Toast.makeText(context, "Review submitted successfully", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Failed to submit review: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            }
+                            // 清空輸入框
+                            clearInputFields()
                         }
                 }
             }
@@ -361,6 +362,16 @@ class ToiletProfileFragment : Fragment() {
             }
         })
     }
+
+    // 專門的函數來清空輸入框
+    private fun clearInputFields() {
+        reviewTitle.text.clear()
+        reviewBody.text.clear()
+        toiletRating.rating = 0.0f // 重置評分為 0
+// 使用 Log 打印清空後的內容
+        Log.d("ToiletProfileFragment", "reviewTitle after clear: '${reviewTitle.text}'")
+        Log.d("ToiletProfileFragment", "reviewBody after clear: '${reviewBody.text}'")
+        Log.d("ToiletProfileFragment", "toiletRating after clear: '${toiletRating.rating}'")    }
 
     // Check if user is logged in to show/hide the appropriate buttons
     private fun checkAuthStatus() {
@@ -400,7 +411,7 @@ class ToiletProfileFragment : Fragment() {
 //                }
 //            })
 //    }
-private fun loadReviews(roomID: String) {
+fun loadReviews(roomID: String) {
     database_reviews.child(roomID)
         .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
