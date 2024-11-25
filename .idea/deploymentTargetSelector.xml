@@ -13,7 +13,13 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="RestroomNearByUITest">
+      <SelectionState runConfigName="ToiletProfileUITest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="testReviewSubmissionAndFirebaseData()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="testReviewSubmission()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
