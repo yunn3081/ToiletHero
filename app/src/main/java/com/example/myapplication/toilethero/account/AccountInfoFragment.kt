@@ -17,14 +17,14 @@ open class AccountInfoFragment(
     private val repository: AccountRepository = AccountRepository() // 默认使用真实的 Repository
 ) : Fragment() {
 
-    private lateinit var firstNameEditText: EditText
-    private lateinit var lastNameEditText: EditText
-    private lateinit var emailEditText: EditText
-    private lateinit var phoneEditText: EditText
-    private lateinit var dobEditText: EditText
+    lateinit var firstNameEditText: EditText
+    lateinit var lastNameEditText: EditText
+    lateinit var emailEditText: EditText
+    lateinit var phoneEditText: EditText
+    lateinit var dobEditText: EditText
     private lateinit var changeInfoButton: Button
     private lateinit var saveChangeButton: Button
-    private lateinit var logoutButton: Button
+    lateinit var logoutButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -6,12 +6,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.tasks.await
 
-class AccountRepository(
+open class AccountRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val database: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
 ) {
 
-    suspend fun getUserData(): Map<String, String>? {
+    open suspend fun getUserData(): Map<String, String>? {
         val userId = auth.currentUser?.uid ?: return null
         val snapshot = database.child(userId).get().await() // 使用协程处理异步调用
         return if (snapshot.exists()) {
@@ -25,7 +25,7 @@ class AccountRepository(
         } else null
     }
 
-    suspend fun updateUserData(data: Map<String, String>): Boolean {
+    open suspend fun updateUserData(data: Map<String, String>): Boolean {
         val userId = auth.currentUser?.uid ?: return false
         return try {
             database.child(userId).updateChildren(data).await()
@@ -35,7 +35,7 @@ class AccountRepository(
         }
     }
 
-    fun signOut() {
+    open fun signOut() {
         auth.signOut()
     }
 }

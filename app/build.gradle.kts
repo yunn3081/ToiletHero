@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) // Remove this line if not using the alias system
+    // Remove this line if you have the alias above: id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id ("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -16,7 +17,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         val googleMapsApiKey = if (project.hasProperty("GOOGLE_MAPS_API_KEY")) {
             project.property("GOOGLE_MAPS_API_KEY") as String
@@ -78,6 +78,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
 
+
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
@@ -90,6 +91,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("org.robolectric:robolectric:4.10")
     testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("org.mockito:mockito-core:4.2.0")
+    testImplementation("org.mockito:mockito-inline:4.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
 
     // Logging for Tests
     testImplementation("org.slf4j:slf4j-simple:2.0.9")
@@ -105,8 +110,17 @@ dependencies {
     androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("com.google.truth:truth:1.1.3")
+    androidTestImplementation(project(":app")) // 替换 `:app` 为主模块的名称
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.0")
+
+    // Debug variants
     debugImplementation("androidx.fragment:fragment-testing:1.6.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.1")
     implementation(kotlin("test"))
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.9.0")
+
+
 
 
 
