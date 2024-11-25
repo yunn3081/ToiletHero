@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.androidx.junit.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")

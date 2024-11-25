@@ -31,9 +31,9 @@ import okio.IOException
 class ToiletProfileFragment: Fragment() {
 
     lateinit var toiletName: TextView
-    private lateinit var toiletRoomNumber: TextView
+    lateinit var toiletRoomNumber: TextView
     lateinit var toiletAddress: TextView
-    private lateinit var toiletRating: RatingBar
+    lateinit var toiletRating: RatingBar
     private lateinit var ratingStats: TextView
     lateinit var reviewTitle: EditText
     lateinit var reviewBody: EditText
@@ -41,15 +41,15 @@ class ToiletProfileFragment: Fragment() {
     private lateinit var loginButton: Button
     private lateinit var restroomImageView: ImageView
     private lateinit var loadingSpinner: ProgressBar
-    private lateinit var database_restrooms: DatabaseReference
-    private lateinit var database_reviews: DatabaseReference
+    lateinit var database_restrooms: DatabaseReference
+    lateinit var database_reviews: DatabaseReference
     val handler = Handler(Looper.getMainLooper())
     private val timeoutDuration = 10000L // 10 seconds
     private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
-    private val auth = FirebaseAuth.getInstance()
+    val auth = FirebaseAuth.getInstance()
     private lateinit var reviewsRecyclerView: RecyclerView
-    private lateinit var reviewsAdapter: ReviewsAdapter
-    private var reviewList = mutableListOf<Review>()
+    lateinit var reviewsAdapter: ReviewsAdapter
+    var reviewList = mutableListOf<Review>()
     private lateinit var noReviewsTextView: TextView
     private lateinit var directionIcon: ImageView
     private var gpsCoordinates: String? = null
@@ -304,7 +304,7 @@ class ToiletProfileFragment: Fragment() {
         }
     }
 
-    private fun submitReview(roomID: String) {
+    fun submitReview(roomID: String) {
         val title = reviewTitle.text.toString().trim()
         val body = reviewBody.text.toString().trim()
         val rating = toiletRating.rating
