@@ -89,7 +89,7 @@ class RestroomNearByUITest {
         latch.await(10, TimeUnit.SECONDS)
         Thread.sleep(1000)
 
-        // 檢查基本UI元素
+        // check UI elements
         waitForView(withId(R.id.restroom_name))
         onView(withId(R.id.restroom_name))
             .check(matches(isDisplayed()))
@@ -98,7 +98,7 @@ class RestroomNearByUITest {
         onView(withId(R.id.restroom_address))
             .check(matches(isDisplayed()))
 
-        // 檢查 loading spinner 是否顯示
+        // check if loading spinner shows up
         onView(withId(R.id.loadingSpinner))
             .check(matches(isDisplayed()))
 
@@ -117,7 +117,7 @@ class RestroomNearByUITest {
             Log.d("UI_TEST", "Image loaded successfully")
         } catch (e: Exception) {
             Log.e("UI_TEST", "Error checking image visibility: ${e.message}")
-            // 如果檢查失敗，輸出當前狀態
+            // if check failed, then print the current states
             scenario.onFragment { fragment ->
                 val imageView = fragment.view?.findViewById<ImageView>(R.id.restroom_image)
                 val spinner = fragment.view?.findViewById<ProgressBar>(R.id.loadingSpinner)

@@ -18,7 +18,7 @@ class AccountFragmentUITest {
 
     @Before
     fun setup() {
-        // 使用 AppCompatActivity 替代默认的 EmptyFragmentActivity
+        // use AppCompatActivity instead of EmptyFragmentActivity
         scenario = launchFragmentInContainer<AccountFragment>(
             themeResId = R.style.Theme_MyApplication
         ) {
@@ -28,7 +28,7 @@ class AccountFragmentUITest {
 
     @Test
     fun testGreetingTextIsDisplayed() {
-        // 检查 greetingText 是否显示并包含 "Hi,"
+        // check if greetingText contains "Hi,"
         onView(withId(R.id.greetingText))
             .check(matches(isDisplayed()))
             .check(matches(withSubstring("Hi,")))
@@ -36,14 +36,14 @@ class AccountFragmentUITest {
 
     @Test
     fun testSettingsButtonIsDisplayed() {
-        // 检查 settings_button 是否显示
+        // check if settings_button shows up
         onView(withId(R.id.settings_button))
             .check(matches(isDisplayed()))
     }
 
     @Test
     fun testReviewFragmentIsLoaded() {
-        // 检查 review_fragment_container 是否显示
+        // check if review_fragment_container shows up
         onView(withId(R.id.review_fragment_container))
             .check(matches(isDisplayed()))
     }

@@ -2,7 +2,7 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.RatingBar
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.ext.junit.runners.AndroidJUnit4
+//import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.myapplication.R
 import com.example.myapplication.toilethero.review.Review
 import com.example.myapplication.toilethero.review.ReviewsAdapter

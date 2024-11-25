@@ -33,23 +33,23 @@ class ToiletProfileUITest {
 
     @Before
     fun setup() {
-        // 使用匿名登入
+//        anonymousLogin
         anonymousLogin()
 
-        // 傳遞測試用的房間 ID
+        // pass thru room ID
         val bundle = Bundle().apply {
             putString("roomID", testRoomId)
         }
 
-        // 啟動 Fragment 並傳遞參數
+        // inflate/init Fragment
         scenario = launchFragmentInContainer(fragmentArgs = bundle, themeResId = R.style.Theme_MyApplication)
     }
 
-    // 使用匿名登入的函數
+    // call anonymousLogin
     private fun anonymousLogin() {
         val latch = CountDownLatch(1)
 
-        // 匿名登入
+        // sign-in anonymously
         auth.signInAnonymously()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -60,13 +60,13 @@ class ToiletProfileUITest {
                 latch.countDown()
             }
 
-        // 等待登入完成
+        // waiting for the process ends
         latch.await(5, TimeUnit.SECONDS)
     }
 
     @Test
     fun testInitialUIElementsVisibility() {
-        // 檢查基本 UI 元件是否顯示
+        // check if UI shows up
         onView(withId(R.id.toilet_name)).check(matches(isDisplayed()))
         onView(withId(R.id.toilet_roomNumber)).check(matches(isDisplayed()))
         onView(withId(R.id.toilet_address)).check(matches(isDisplayed()))
@@ -76,7 +76,7 @@ class ToiletProfileUITest {
 
     @Test
     fun testAuthenticationUIStates() {
-        // 登入狀態檢查
+        // check authentication status
         if (auth.currentUser != null) {
             onView(withId(R.id.submit_review_button)).check(matches(isDisplayed()))
             onView(withId(R.id.review_title)).check(matches(isDisplayed()))

@@ -20,6 +20,5 @@ class FakeAccountRepository : AccountRepository() {
     }
 
     override fun signOut() {
-        // 模拟登出逻辑
     }
 }
