@@ -1,111 +1,153 @@
 package com.example.myapplication
 
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
-import org.junit.Before
-import org.junit.Test
-//import kotlin.test.assertEquals
-//import kotlin.test.assertNotNull
-//import kotlin.test.assertTrue
+import android.os.Looper
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication.toilethero.account.AccountInfoFragment
+import com.example.myapplication.toilethero.account.AccountRepository
+import io.mockk.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.junit.*
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.LooperMode
+import org.robolectric.Shadows.shadowOf
 
-class AccountInfoFragmentUnitTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], manifest = Config.NONE)
+@LooperMode(LooperMode.Mode.PAUSED)
+class AccountInfoUnitTest {
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var repository: AccountRepository
 
     @Before
     fun setup() {
-        println("=== Starting New Test ===")
+        println("🛠️ Setting up test environment...")
+
+        // Mock AccountRepository
+        repository = mockk(relaxed = true)
     }
 
     @Test
-    fun `test user info formatting`() {
-        println("\n🧪 Testing user info formatting")
+    fun `getUserInfo should populate UI with user data`() = runTest {
+        println("🧪 Testing: getUserInfo populates UI with user data")
 
-        // Given
-        val userInfo = UserInfo("John", "Doe", "john.doe@example.com")
-        println("Input UserInfo: $userInfo")
-
-        // When
-        val formattedInfo = formatUserInfo(userInfo)
-        println("Formatted UserInfo: $formattedInfo")
-
-        // Then
-        assertEquals("John Doe (john.doe@example.com)", formattedInfo)
-        println("✅ Test passed: User info formatted correctly")
-    }
-
-    @Test
-    fun `test user email validation`() {
-        println("\n🧪 Testing email validation")
-
-        // Given
-        val emails = listOf(
-            "john.doe@example.com" to true,
-            "invalid-email" to false,
-            "test@domain" to false,
-            "user.name+tag+sorting@example.com" to true
+        // 模擬用戶數據
+        val mockData = mapOf(
+            "firstName" to "John",
+            "lastName" to "Doe",
+            "email" to "johndoe@example.com",
+            "phone" to "1234567890",
+            "dob" to "1990-01-01"
         )
-        println("Testing emails: $emails")
 
-        // When & Then
-        emails.forEach { (email, expected) ->
-            val isValid = validateEmail(email)
-            println("Email: $email, Is valid: $isValid")
+        coEvery { repository.getUserData() } returns mockData
 
-            if (expected) {
-                assertTrue("Email $email should be valid", isValid)
-                println("✅ Test passed: Valid email")
-            } else {
-                assertTrue("Email $email should be invalid", !isValid)
-                println("✅ Test passed: Invalid email identified correctly")
+        val scenario = launchFragmentInContainer<AccountInfoFragment>(
+            themeResId = R.style.Theme_MyApplication
+        ) {
+            AccountInfoFragment(repository)
+        }
+
+        scenario.onFragment { fragment ->
+            fragment.getUserInfo()
+
+            // 處理所有異步任務
+            shadowOf(Looper.getMainLooper()).idle()
+
+            // 驗證 UI 是否正確更新
+            Assert.assertEquals("John", fragment.firstNameEditText.text.toString())
+            Assert.assertEquals("Doe", fragment.lastNameEditText.text.toString())
+            Assert.assertEquals("johndoe@example.com", fragment.emailEditText.text.toString())
+            Assert.assertEquals("1234567890", fragment.phoneEditText.text.toString())
+            Assert.assertEquals("1990-01-01", fragment.dobEditText.text.toString())
+        }
+
+        println("✅ Test passed: getUserInfo populated UI with correct data.")
+        println("======================================================================================================")
+    }
+
+    @Test
+    fun `saveUserInfo should call repository updateUserData with updated data`() = runBlocking {
+        println("🧪 Testing: saveUserInfo calls repository updateUserData")
+
+        coEvery { repository.updateUserData(any()) } returns true
+
+        val scenario = launchFragmentInContainer<AccountInfoFragment>(
+            themeResId = R.style.Theme_MyApplication
+        ) {
+            AccountInfoFragment(repository)
+        }
+
+        scenario.onFragment { fragment ->
+            // 模擬用戶在 UI 中更新數據
+            fragment.firstNameEditText.setText("Jane")
+            fragment.lastNameEditText.setText("Doe")
+            fragment.emailEditText.setText("janedoe@example.com")
+            fragment.phoneEditText.setText("0987654321")
+            fragment.dobEditText.setText("1992-02-02")
+
+            fragment.saveUserInfo()
+
+            // 驗證 Repository 是否被正確調用
+            coVerify {
+                repository.updateUserData(
+                    mapOf(
+                        "firstName" to "Jane",
+                        "lastName" to "Doe",
+                        "email" to "janedoe@example.com",
+                        "phone" to "0987654321",
+                        "dob" to "1992-02-02"
+                    )
+                )
             }
         }
+
+        println("✅ Test passed: saveUserInfo called repository updateUserData with correct data.")
+        println("======================================================================================================")
+
     }
 
     @Test
-    fun `test user first and last name validation`() {
-        println("\n🧪 Testing user name validation")
+    fun `logoutButton should call signOut and navigate`() = runBlocking {
+        println("🧪 Testing: logoutButton calls signOut and navigates")
 
-        // Given
-        val names = listOf(
-            Pair("John", "Doe") to true,
-            Pair("", "Smith") to false,
-            Pair("Anna", "") to false,
-            Pair("", "") to false
-        )
-        println("Testing names: $names")
+        // 模擬 NavController
+        val mockNavController = mockk<NavController>(relaxed = true)
 
-        // When & Then
-        names.forEach { (namePair, expected) ->
-            val isValid = validateName(namePair.first, namePair.second)
-            println("Names: ${namePair.first} ${namePair.second}, Is valid: $isValid")
-
-            if (expected) {
-                assertTrue("Name ${namePair.first} ${namePair.second} should be valid", isValid)
-                println("✅ Test passed: Valid name")
-            } else {
-                assertTrue("Name ${namePair.first} ${namePair.second} should be invalid", !isValid)
-                println("✅ Test passed: Invalid name identified correctly")
-            }
+        val scenario = launchFragmentInContainer<AccountInfoFragment>(
+            themeResId = R.style.Theme_MyApplication
+        ) {
+            AccountInfoFragment(repository)
         }
+
+        scenario.onFragment { fragment ->
+            // 將 NavController 綁定到 Fragment 的視圖
+            Navigation.setViewNavController(fragment.requireView(), mockNavController)
+
+            // 模擬按下登出按鈕
+            fragment.logoutButton.performClick()
+
+            // 驗證 NavController 是否正確導航
+            verify {
+                mockNavController.navigate(R.id.action_accountFragment_to_notificationsFragment)
+            }
+
+            // 驗證 signOut 方法是否被調用
+            coVerify { repository.signOut() }
+        }
+
+        println("✅ Test passed: logoutButton triggered signOut and navigation.")
+        println("======================================================================================================")
+
     }
 
-    // Formatting logic
-    private fun formatUserInfo(userInfo: UserInfo): String {
-        return "${userInfo.firstName} ${userInfo.lastName} (${userInfo.email})"
-    }
-
-    // Email validation logic
-    private fun validateEmail(email: String): Boolean {
-        return email.contains("@") && email.contains(".")
-    }
-
-    // Name validation logic
-    private fun validateName(firstName: String, lastName: String): Boolean {
-        return firstName.isNotEmpty() && lastName.isNotEmpty()
-    }
 }
-
-data class UserInfo(
-    val firstName: String,
-    val lastName: String,
-    val email: String
-)
