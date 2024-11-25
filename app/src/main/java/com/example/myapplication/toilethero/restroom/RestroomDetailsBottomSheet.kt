@@ -34,6 +34,7 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
     private val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
     private val handler = Handler(Looper.getMainLooper())
     private val timeoutDuration = 15000L // 10 seconds
+    private val client = OkHttpClient()
 
     companion object {
         fun newInstance(restroomId: String): RestroomDetailsBottomSheet {
@@ -121,9 +122,9 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
         return view
     }
 
-    private fun fetchPlaceId(latitude: Double, longitude: Double, callback: (List<String>?) -> Unit) {
+    fun fetchPlaceId(latitude: Double, longitude: Double, callback: (List<String>?) -> Unit) {
         val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&rankby=distance&key=$apiKey"
-        val client = OkHttpClient()
+//        val client = OkHttpClient()
 
         val request = Request.Builder()
             .url(url)
@@ -174,9 +175,9 @@ class RestroomDetailsBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun fetchPhotoReference(placeId: String, callback: (String?) -> Unit) {
+    fun fetchPhotoReference(placeId: String, callback: (String?) -> Unit) {
         val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey"
-        val client = OkHttpClient()
+//        val client = OkHttpClient()
 
         val request = Request.Builder()
             .url(url)

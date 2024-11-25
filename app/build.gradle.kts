@@ -98,7 +98,8 @@ dependencies {
     debugImplementation("androidx.fragment:fragment-testing:1.6.0")
 
     // Logging for Tests
-    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+    testImplementation("org.slf4j:slf4j-simple:2.0.9")
+    testImplementation("org.slf4j:slf4j-api:2.0.9")
 
     // Instrumented Tests (Android Tests)
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
