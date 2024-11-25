@@ -1,5 +1,0 @@
-<application>
-    <activity
-        android:name="com.example.myapplication.TestActivity"
-        android:exported="true" />
-</application>
