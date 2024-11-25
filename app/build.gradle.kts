@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) // Remove this line if not using the alias system
+    // Remove this line if you have the alias above: id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id ("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -45,7 +46,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -77,7 +77,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.23")
 
-    // Unit Testing
+    // Testing Dependencies
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
@@ -89,6 +89,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("org.robolectric:robolectric:4.10")
     testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("org.mockito:mockito-core:4.2.0")
+    testImplementation("org.mockito:mockito-inline:4.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
 
     // Logging for Tests
     testImplementation("org.slf4j:slf4j-simple:2.0.9")
@@ -104,9 +108,10 @@ dependencies {
     androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("com.google.truth:truth:1.1.3")
+
+    // Debug variants
     debugImplementation("androidx.fragment:fragment-testing:1.6.0")
     implementation(kotlin("test"))
-
-
-
 }
+
+
