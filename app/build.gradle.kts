@@ -82,7 +82,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.5")
 
     // Logging for Tests
-    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+    testImplementation("org.slf4j:slf4j-simple:2.0.9")
+    testImplementation("org.slf4j:slf4j-api:2.0.9")
 
     // Instrumented Tests
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
